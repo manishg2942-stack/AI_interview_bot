@@ -1,0 +1,60 @@
+# Node modules
+node_modules/
+frontend/node_modules/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Build folders
+dist/
+build/
+out/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+.coverage
+htmlcov/
+
+# Temporary files
+tmp/
+temp/
+
+# Cache
+.cache/
+.pytest_cache/
+
+# Vite
+vite.svg
+
+# Local configs
+*.local
+
+# Generated files
+*.tsbuildinfo

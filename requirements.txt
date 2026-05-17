@@ -1,0 +1,9 @@
+python-dotenv
+fastapi
+uvicorn
+httpx
+livekit
+livekit-agents
+livekit-plugins-google
+livekit-plugins-silero
+livekit-plugins-noise-cancellation
