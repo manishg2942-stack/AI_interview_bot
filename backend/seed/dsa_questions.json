@@ -1,0 +1,904 @@
+{
+  "questions": [
+    {
+      "title": "Two Sum Indices",
+      "question": "Given an integer array and a target value, return the indices of two different elements whose sum is equal to the target.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Array", "HashMap"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["hashing", "lookup"]
+    },
+    {
+      "title": "First Duplicate Number",
+      "question": "Given an array of integers, find the first value that appears more than once while scanning from left to right.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Array", "HashSet"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["hashing", "duplicates"]
+    },
+    {
+      "title": "Move Zeroes To End",
+      "question": "Move all zero values in an array to the end while keeping the relative order of non-zero values unchanged.",
+      "difficulty": "Easy",
+      "companies": ["Meta", "Microsoft"],
+      "topics": ["Array", "Two Pointers"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["in-place", "two-pointers"]
+    },
+    {
+      "title": "Maximum Subarray Sum",
+      "question": "Find the maximum possible sum of a contiguous subarray in an integer array that may contain negative numbers.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Array", "Dynamic Programming"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["kadane", "prefix"]
+    },
+    {
+      "title": "Best Time To Buy And Sell Stock",
+      "question": "Given daily stock prices, find the maximum profit from one buy and one sell operation where buying must happen before selling.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["Array", "Greedy"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["greedy", "min-tracking"]
+    },
+    {
+      "title": "Valid Anagram",
+      "question": "Given two strings, determine whether the second string is an anagram of the first using character frequency counts.",
+      "difficulty": "Easy",
+      "companies": ["Google", "Microsoft"],
+      "topics": ["String", "HashMap"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["frequency", "strings"]
+    },
+    {
+      "title": "Valid Parentheses",
+      "question": "Given a string containing brackets, determine whether every opening bracket is closed in the correct order and type.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Meta"],
+      "topics": ["String", "Stack"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["stack", "parsing"]
+    },
+    {
+      "title": "Merge Two Sorted Arrays",
+      "question": "Given two sorted arrays, merge them into one sorted array using an efficient two-pointer approach.",
+      "difficulty": "Easy",
+      "companies": ["Microsoft", "Amazon"],
+      "topics": ["Array", "Two Pointers"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["merge", "two-pointers"]
+    },
+    {
+      "title": "Binary Search In Sorted Array",
+      "question": "Given a sorted array and a target value, return the target index using binary search, or return -1 if it is absent.",
+      "difficulty": "Easy",
+      "companies": ["Google", "Microsoft"],
+      "topics": ["Array", "Binary Search"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["binary-search", "search"]
+    },
+    {
+      "title": "Find Missing Number",
+      "question": "An array contains distinct numbers from 0 to n with one number missing. Find the missing number.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Array", "Math", "Bit Manipulation"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["xor", "math"]
+    },
+    {
+      "title": "Intersection Of Two Arrays",
+      "question": "Given two arrays, return the unique values that appear in both arrays.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Meta"],
+      "topics": ["Array", "HashSet"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["set", "intersection"]
+    },
+    {
+      "title": "Remove Duplicates From Sorted Array",
+      "question": "Given a sorted array, remove duplicates in place and return the count of unique elements.",
+      "difficulty": "Easy",
+      "companies": ["Microsoft", "Google"],
+      "topics": ["Array", "Two Pointers"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["in-place", "deduplication"]
+    },
+    {
+      "title": "Majority Element",
+      "question": "Find the element that appears more than half the time in an array, assuming such an element always exists.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Meta"],
+      "topics": ["Array", "Voting"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["boyer-moore", "frequency"]
+    },
+    {
+      "title": "Reverse A String In Place",
+      "question": "Given a character array, reverse it in place without using extra space proportional to the input size.",
+      "difficulty": "Easy",
+      "companies": ["Google", "Microsoft"],
+      "topics": ["String", "Two Pointers"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["in-place", "two-pointers"]
+    },
+    {
+      "title": "Palindrome String Check",
+      "question": "Determine whether a string is a palindrome after ignoring spaces, punctuation, and character casing.",
+      "difficulty": "Easy",
+      "companies": ["Meta", "Amazon"],
+      "topics": ["String", "Two Pointers"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["palindrome", "normalization"]
+    },
+    {
+      "title": "Longest Common Prefix",
+      "question": "Given a list of strings, find the longest prefix shared by every string in the list.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["String"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["prefix", "comparison"]
+    },
+    {
+      "title": "Contains Nearby Duplicate",
+      "question": "Given an array and an integer k, determine whether the same value appears at two indices whose distance is at most k.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Array", "HashMap", "Sliding Window"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["window", "duplicates"]
+    },
+    {
+      "title": "Single Number",
+      "question": "Every number in an array appears twice except one number. Find the number that appears only once.",
+      "difficulty": "Easy",
+      "companies": ["Google", "Microsoft"],
+      "topics": ["Array", "Bit Manipulation"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["xor", "bits"]
+    },
+    {
+      "title": "Count Set Bits",
+      "question": "Given a non-negative integer, count how many bits are set to 1 in its binary representation.",
+      "difficulty": "Easy",
+      "companies": ["Microsoft", "Amazon"],
+      "topics": ["Bit Manipulation"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["bits", "counting"]
+    },
+    {
+      "title": "Queue Using Two Stacks",
+      "question": "Design a queue data structure using two stacks and support enqueue, dequeue, and peek operations.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Meta"],
+      "topics": ["Stack", "Queue", "Design"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["data-structure", "amortized"]
+    },
+    {
+      "title": "Longest Substring Without Repeating Characters",
+      "question": "Given a string, find the length of the longest substring that contains no repeated characters.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["String", "Sliding Window", "HashMap"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["sliding-window", "frequency"]
+    },
+    {
+      "title": "Group Anagrams",
+      "question": "Given a list of words, group together all words that are anagrams of each other.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["String", "HashMap", "Sorting"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["grouping", "frequency"]
+    },
+    {
+      "title": "Top K Frequent Elements",
+      "question": "Given an array of integers and a number k, return the k values that appear most frequently.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Array", "HashMap", "Heap"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["heap", "frequency"]
+    },
+    {
+      "title": "Product Of Array Except Self",
+      "question": "Return an array where each position contains the product of all input numbers except the number at that position, without using division.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Meta", "Microsoft"],
+      "topics": ["Array", "Prefix"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["prefix", "suffix"]
+    },
+    {
+      "title": "Three Sum",
+      "question": "Given an integer array, return all unique triplets whose values sum to zero.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Meta"],
+      "topics": ["Array", "Two Pointers", "Sorting"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["two-pointers", "deduplication"]
+    },
+    {
+      "title": "Container With Most Water",
+      "question": "Given heights of vertical lines, find two lines that can hold the maximum amount of water with the x-axis.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Array", "Two Pointers", "Greedy"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["two-pointers", "optimization"]
+    },
+    {
+      "title": "Minimum Size Subarray Sum",
+      "question": "Given positive integers and a target sum, find the minimum length of a contiguous subarray whose sum is at least the target.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Microsoft"],
+      "topics": ["Array", "Sliding Window"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["sliding-window", "minimum"]
+    },
+    {
+      "title": "Longest Repeating Character Replacement",
+      "question": "Given a string and k replacements, find the longest substring that can be made of the same character after at most k changes.",
+      "difficulty": "Medium",
+      "companies": ["Meta", "Google"],
+      "topics": ["String", "Sliding Window"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["window", "frequency"]
+    },
+    {
+      "title": "Permutation In String",
+      "question": "Given two strings, determine whether one string contains any permutation of the other as a contiguous substring.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["String", "Sliding Window", "HashMap"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["permutation", "frequency"]
+    },
+    {
+      "title": "Find All Anagram Windows",
+      "question": "Given a string and a pattern, return every start index where an anagram of the pattern appears in the string.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["String", "Sliding Window"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["window", "anagram"]
+    },
+    {
+      "title": "Daily Temperatures",
+      "question": "For each day, return how many days must pass until a warmer temperature occurs, or zero if none exists.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Meta"],
+      "topics": ["Array", "Stack", "Monotonic Stack"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["monotonic-stack", "next-greater"]
+    },
+    {
+      "title": "Evaluate Reverse Polish Notation",
+      "question": "Evaluate an arithmetic expression represented in reverse polish notation using a stack.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Microsoft"],
+      "topics": ["Stack", "Math"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["stack", "expression"]
+    },
+    {
+      "title": "Min Stack",
+      "question": "Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Stack", "Design"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["design", "constant-time"]
+    },
+    {
+      "title": "Search In Rotated Sorted Array",
+      "question": "Given a sorted array rotated at an unknown pivot, find the index of a target value in logarithmic time.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google", "Microsoft"],
+      "topics": ["Array", "Binary Search"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["binary-search", "rotation"]
+    },
+    {
+      "title": "Find Minimum In Rotated Sorted Array",
+      "question": "Given a rotated sorted array with unique values, find the minimum element in logarithmic time.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Array", "Binary Search"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["binary-search", "minimum"]
+    },
+    {
+      "title": "Koko Eating Bananas Variant",
+      "question": "Given pile sizes and a time limit, find the minimum integer eating speed needed to finish all piles on time.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Binary Search", "Math"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["binary-search-on-answer", "optimization"]
+    },
+    {
+      "title": "Merge Intervals",
+      "question": "Given a list of intervals, merge all overlapping intervals and return the non-overlapping result.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Microsoft", "Amazon"],
+      "topics": ["Array", "Sorting", "Intervals"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["intervals", "sorting"]
+    },
+    {
+      "title": "Insert Interval",
+      "question": "Given sorted non-overlapping intervals and a new interval, insert it and merge if necessary.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Meta"],
+      "topics": ["Array", "Intervals"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["intervals", "merge"]
+    },
+    {
+      "title": "Non Overlapping Intervals",
+      "question": "Given intervals, find the minimum number of intervals to remove so the rest do not overlap.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Greedy", "Intervals", "Sorting"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["greedy", "intervals"]
+    },
+    {
+      "title": "Meeting Rooms Required",
+      "question": "Given meeting start and end times, find the minimum number of rooms required to schedule all meetings.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["Heap", "Intervals", "Sorting"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["heap", "scheduling"]
+    },
+    {
+      "title": "Linked List Cycle",
+      "question": "Given a linked list, determine whether it contains a cycle using constant extra space.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Linked List", "Two Pointers"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["fast-slow", "cycle"]
+    },
+    {
+      "title": "Reverse Linked List",
+      "question": "Reverse a singly linked list iteratively or recursively and return the new head.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Microsoft", "Meta"],
+      "topics": ["Linked List"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["pointers", "recursion"]
+    },
+    {
+      "title": "Merge Two Sorted Lists",
+      "question": "Merge two sorted linked lists into one sorted linked list by reusing existing nodes.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Linked List", "Recursion"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["merge", "pointers"]
+    },
+    {
+      "title": "Remove Nth Node From End",
+      "question": "Remove the nth node from the end of a linked list in one pass.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Meta"],
+      "topics": ["Linked List", "Two Pointers"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["two-pointers", "dummy-node"]
+    },
+    {
+      "title": "Reorder Linked List",
+      "question": "Reorder a linked list by alternating nodes from the start and end without changing node values.",
+      "difficulty": "Medium",
+      "companies": ["Meta", "Amazon"],
+      "topics": ["Linked List", "Two Pointers"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["reverse", "merge"]
+    },
+    {
+      "title": "Add Two Numbers As Lists",
+      "question": "Two linked lists represent non-negative integers in reverse order. Return their sum as a linked list.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Linked List", "Math"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["carry", "simulation"]
+    },
+    {
+      "title": "Copy List With Random Pointer",
+      "question": "Deep copy a linked list where each node has a next pointer and an arbitrary random pointer.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Linked List", "HashMap"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["deep-copy", "mapping"]
+    },
+    {
+      "title": "LRU Cache",
+      "question": "Design a cache that supports get and put in constant time while evicting the least recently used key when full.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["HashMap", "Linked List", "Design"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["cache", "design"]
+    },
+    {
+      "title": "Validate Binary Search Tree",
+      "question": "Given a binary tree, determine whether it satisfies the ordering rules of a binary search tree.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Microsoft", "Google"],
+      "topics": ["Tree", "DFS", "BST"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["bounds", "recursion"]
+    },
+    {
+      "title": "Maximum Depth Of Binary Tree",
+      "question": "Find the maximum depth of a binary tree using recursive or iterative traversal.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Tree", "DFS", "BFS"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["tree", "depth"]
+    },
+    {
+      "title": "Binary Tree Level Order Traversal",
+      "question": "Return the node values of a binary tree grouped by level from top to bottom.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Tree", "BFS", "Queue"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["bfs", "level-order"]
+    },
+    {
+      "title": "Lowest Common Ancestor In BST",
+      "question": "Given a binary search tree and two nodes, find their lowest common ancestor.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Tree", "BST"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["bst", "ancestor"]
+    },
+    {
+      "title": "Binary Tree Right Side View",
+      "question": "Return the values visible when a binary tree is viewed from the right side.",
+      "difficulty": "Medium",
+      "companies": ["Meta", "Amazon"],
+      "topics": ["Tree", "BFS", "DFS"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["view", "level-order"]
+    },
+    {
+      "title": "Diameter Of Binary Tree",
+      "question": "Find the length of the longest path between any two nodes in a binary tree.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Tree", "DFS"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["height", "diameter"]
+    },
+    {
+      "title": "Balanced Binary Tree",
+      "question": "Determine whether every node in a binary tree has left and right subtree heights that differ by at most one.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Tree", "DFS"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["height", "balanced"]
+    },
+    {
+      "title": "Serialize And Deserialize Binary Tree",
+      "question": "Design a way to convert a binary tree into a string and reconstruct the same tree from that string.",
+      "difficulty": "Hard",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["Tree", "DFS", "Design"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["serialization", "design"]
+    },
+    {
+      "title": "Kth Smallest In BST",
+      "question": "Given a binary search tree and an integer k, return the kth smallest value in the tree.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Tree", "BST", "DFS"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["inorder", "kth"]
+    },
+    {
+      "title": "Build Tree From Traversals",
+      "question": "Construct a binary tree from preorder and inorder traversal arrays.",
+      "difficulty": "Medium",
+      "companies": ["Microsoft", "Amazon"],
+      "topics": ["Tree", "Recursion", "HashMap"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["tree-construction", "recursion"]
+    },
+    {
+      "title": "Trie Insert Search Prefix",
+      "question": "Design a trie that supports inserting words, exact word search, and prefix search.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Trie", "Design"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["prefix-tree", "design"]
+    },
+    {
+      "title": "Word Search In Grid",
+      "question": "Given a grid of letters and a target word, determine whether the word can be formed by adjacent cells without reusing a cell.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Backtracking", "Matrix"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["dfs", "backtracking"]
+    },
+    {
+      "title": "Combination Sum",
+      "question": "Given candidate numbers and a target, return all unique combinations where chosen numbers sum to the target and may be reused.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Backtracking", "Array"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["combinations", "recursion"]
+    },
+    {
+      "title": "Subsets",
+      "question": "Given a set of distinct integers, return every possible subset.",
+      "difficulty": "Medium",
+      "companies": ["Meta", "Amazon"],
+      "topics": ["Backtracking", "Bit Manipulation"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["subsets", "recursion"]
+    },
+    {
+      "title": "Permutations",
+      "question": "Given a list of distinct numbers, return every possible ordering of those numbers.",
+      "difficulty": "Medium",
+      "companies": ["Microsoft", "Amazon"],
+      "topics": ["Backtracking"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["permutation", "recursion"]
+    },
+    {
+      "title": "Generate Valid Parentheses",
+      "question": "Given n pairs of parentheses, generate all combinations of well-formed parentheses.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Meta"],
+      "topics": ["Backtracking", "String"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["generation", "constraints"]
+    },
+    {
+      "title": "N Queens",
+      "question": "Place n queens on an n by n chessboard so that no two queens attack each other, and return all valid boards.",
+      "difficulty": "Hard",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Backtracking"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["constraints", "search"]
+    },
+    {
+      "title": "Number Of Islands",
+      "question": "Given a grid of land and water cells, count how many connected land components exist.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["Graph", "Matrix", "DFS", "BFS"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["connected-components", "grid"]
+    },
+    {
+      "title": "Clone Graph",
+      "question": "Given a reference node in an undirected connected graph, create a deep copy of the entire graph.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Meta"],
+      "topics": ["Graph", "DFS", "HashMap"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["clone", "mapping"]
+    },
+    {
+      "title": "Course Schedule",
+      "question": "Given course prerequisites, determine whether all courses can be completed without circular dependencies.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Amazon", "Microsoft"],
+      "topics": ["Graph", "Topological Sort"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["cycle-detection", "toposort"]
+    },
+    {
+      "title": "Course Order",
+      "question": "Given course prerequisites, return one valid ordering to complete all courses, or an empty list if impossible.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Microsoft"],
+      "topics": ["Graph", "Topological Sort", "BFS"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["toposort", "indegree"]
+    },
+    {
+      "title": "Rotting Oranges",
+      "question": "Given a grid of fresh and rotten oranges, find the minimum minutes needed for all fresh oranges to become rotten.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Matrix", "BFS"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["multi-source-bfs", "grid"]
+    },
+    {
+      "title": "Pacific Atlantic Water Flow Variant",
+      "question": "Given a matrix of heights, find cells from which water can flow to both of two opposite borders under non-increasing movement.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Matrix", "DFS", "Graph"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["reverse-search", "grid"]
+    },
+    {
+      "title": "Network Delay Time",
+      "question": "Given directed weighted edges and a starting node, find how long it takes for all nodes to receive a signal.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Graph", "Shortest Path", "Heap"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["dijkstra", "weighted-graph"]
+    },
+    {
+      "title": "Cheapest Flight Within Stops",
+      "question": "Given flights, prices, a source, destination, and maximum stops, find the cheapest valid route.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Graph", "Dynamic Programming", "Shortest Path"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["bellman-ford", "constraints"]
+    },
+    {
+      "title": "Minimum Spanning Connection Cost",
+      "question": "Given points in a plane, connect all points with minimum total Manhattan distance.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Graph", "Minimum Spanning Tree"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["mst", "prim"]
+    },
+    {
+      "title": "Alien Dictionary",
+      "question": "Given words sorted according to an unknown alphabet, derive one valid ordering of the alphabet characters.",
+      "difficulty": "Hard",
+      "companies": ["Google", "Meta", "Amazon"],
+      "topics": ["Graph", "Topological Sort"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["toposort", "ordering"]
+    },
+    {
+      "title": "Climbing Stairs",
+      "question": "Given n steps and the ability to climb one or two steps at a time, count how many distinct ways exist to reach the top.",
+      "difficulty": "Easy",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Dynamic Programming", "Math"],
+      "level": ["Fresher", "SDE 1"],
+      "tags": ["dp", "fibonacci"]
+    },
+    {
+      "title": "House Robber",
+      "question": "Given money in houses arranged in a line, find the maximum amount that can be robbed without robbing adjacent houses.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Dynamic Programming", "Array"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["dp", "state-transition"]
+    },
+    {
+      "title": "House Robber Circle",
+      "question": "Given houses arranged in a circle, find the maximum amount that can be robbed without robbing adjacent houses.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Dynamic Programming", "Array"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["dp", "circular"]
+    },
+    {
+      "title": "Coin Change Minimum Coins",
+      "question": "Given coin denominations and an amount, find the minimum number of coins needed to make that amount, or report impossible.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Dynamic Programming"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["unbounded-knapsack", "dp"]
+    },
+    {
+      "title": "Coin Change Ways",
+      "question": "Given coin denominations and an amount, count how many combinations can form the amount.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Dynamic Programming"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["dp", "combinations"]
+    },
+    {
+      "title": "Longest Increasing Subsequence",
+      "question": "Given an integer array, find the length of the longest strictly increasing subsequence.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Microsoft", "Amazon"],
+      "topics": ["Dynamic Programming", "Binary Search"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["lis", "optimization"]
+    },
+    {
+      "title": "Longest Common Subsequence",
+      "question": "Given two strings, find the length of their longest subsequence that appears in both strings in order.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Microsoft"],
+      "topics": ["Dynamic Programming", "String"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["2d-dp", "subsequence"]
+    },
+    {
+      "title": "Word Break",
+      "question": "Given a string and a dictionary of words, determine whether the string can be segmented into dictionary words.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["Dynamic Programming", "String", "Trie"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["dp", "segmentation"]
+    },
+    {
+      "title": "Decode Ways",
+      "question": "Given a digit string where numbers map to letters, count how many valid decodings exist.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Meta"],
+      "topics": ["Dynamic Programming", "String"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["dp", "string"]
+    },
+    {
+      "title": "Unique Paths In Grid",
+      "question": "Given an m by n grid, count how many ways exist to move from the top-left to the bottom-right using only right and down moves.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Microsoft"],
+      "topics": ["Dynamic Programming", "Matrix"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["grid-dp", "counting"]
+    },
+    {
+      "title": "Minimum Path Sum",
+      "question": "Given a grid of non-negative costs, find the minimum cost path from top-left to bottom-right moving only right or down.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Dynamic Programming", "Matrix"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["grid-dp", "minimum"]
+    },
+    {
+      "title": "Maximum Product Subarray",
+      "question": "Given an integer array, find the maximum product of any contiguous subarray.",
+      "difficulty": "Medium",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Array", "Dynamic Programming"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["dp", "negative-values"]
+    },
+    {
+      "title": "Partition Equal Subset Sum",
+      "question": "Given positive integers, determine whether they can be partitioned into two subsets with equal sum.",
+      "difficulty": "Medium",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Dynamic Programming"],
+      "level": ["SDE 1", "SDE 2"],
+      "tags": ["knapsack", "subset-sum"]
+    },
+    {
+      "title": "Edit Distance",
+      "question": "Given two words, find the minimum number of insertions, deletions, and replacements needed to convert one into the other.",
+      "difficulty": "Hard",
+      "companies": ["Google", "Microsoft"],
+      "topics": ["Dynamic Programming", "String"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["2d-dp", "string"]
+    },
+    {
+      "title": "Regular Expression Matching",
+      "question": "Implement pattern matching with dot and star operators where dot matches one character and star matches zero or more of the previous token.",
+      "difficulty": "Hard",
+      "companies": ["Google", "Meta"],
+      "topics": ["Dynamic Programming", "String"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["2d-dp", "pattern-matching"]
+    },
+    {
+      "title": "Median Of Two Sorted Arrays",
+      "question": "Given two sorted arrays, find the median of the combined sorted values in logarithmic time.",
+      "difficulty": "Hard",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Array", "Binary Search"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["binary-search", "partition"]
+    },
+    {
+      "title": "Trapping Rain Water",
+      "question": "Given bar heights, compute how much rain water can be trapped between the bars.",
+      "difficulty": "Hard",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["Array", "Two Pointers", "Stack"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["two-pointers", "monotonic-stack"]
+    },
+    {
+      "title": "Largest Rectangle In Histogram",
+      "question": "Given histogram bar heights, find the largest rectangular area that can be formed inside the histogram.",
+      "difficulty": "Hard",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Array", "Stack", "Monotonic Stack"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["monotonic-stack", "area"]
+    },
+    {
+      "title": "Sliding Window Maximum",
+      "question": "Given an array and window size k, return the maximum value in every contiguous window of size k.",
+      "difficulty": "Hard",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["Array", "Deque", "Sliding Window"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["monotonic-queue", "window"]
+    },
+    {
+      "title": "Minimum Window Substring",
+      "question": "Given two strings, find the shortest substring of the first string that contains every character required by the second string.",
+      "difficulty": "Hard",
+      "companies": ["Google", "Meta", "Amazon"],
+      "topics": ["String", "Sliding Window", "HashMap"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["sliding-window", "minimum"]
+    },
+    {
+      "title": "Word Ladder",
+      "question": "Given a start word, end word, and dictionary, find the minimum number of one-letter transformations needed to reach the end word.",
+      "difficulty": "Hard",
+      "companies": ["Amazon", "Google", "Microsoft"],
+      "topics": ["Graph", "BFS", "String"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["bfs", "shortest-path"]
+    },
+    {
+      "title": "Find Median From Data Stream",
+      "question": "Design a data structure that receives numbers one by one and returns the current median efficiently.",
+      "difficulty": "Hard",
+      "companies": ["Amazon", "Google"],
+      "topics": ["Heap", "Design"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["two-heaps", "data-stream"]
+    },
+    {
+      "title": "Merge K Sorted Lists",
+      "question": "Given k sorted linked lists, merge them into one sorted linked list efficiently.",
+      "difficulty": "Hard",
+      "companies": ["Amazon", "Google", "Meta"],
+      "topics": ["Linked List", "Heap", "Divide And Conquer"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["heap", "merge"]
+    },
+    {
+      "title": "Reverse Nodes In K Group",
+      "question": "Given a linked list and integer k, reverse nodes in groups of k while leaving a final short group unchanged.",
+      "difficulty": "Hard",
+      "companies": ["Amazon", "Microsoft"],
+      "topics": ["Linked List", "Recursion"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["linked-list", "group-reversal"]
+    },
+    {
+      "title": "Burst Balloons",
+      "question": "Given balloon values, choose an order to burst them that maximizes the total score from neighboring values.",
+      "difficulty": "Hard",
+      "companies": ["Google", "Amazon"],
+      "topics": ["Dynamic Programming"],
+      "level": ["SDE 2", "Senior"],
+      "tags": ["interval-dp", "optimization"]
+    }
+  ]
+}

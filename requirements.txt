@@ -2,8 +2,10 @@ python-dotenv
 fastapi
 uvicorn
 httpx
+pymongo
 livekit
 livekit-agents
 livekit-plugins-google
+livekit-plugins-google-genai
 livekit-plugins-silero
 livekit-plugins-noise-cancellation

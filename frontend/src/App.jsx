@@ -1,76 +1,139 @@
-import React, { useMemo, useState } from 'react';
-import {
-  ControlBar,
-  GridLayout,
-  LiveKitRoom,
-  ParticipantTile,
-  RoomAudioRenderer,
-  useTracks,
-} from '@livekit/components-react';
-import { Track } from 'livekit-client';
+import React, { useEffect, useMemo, useState } from 'react';
+import { LiveKitRoom } from '@livekit/components-react';
 
-const tokenEndpoint = import.meta.env.VITE_TOKEN_ENDPOINT || 'http://localhost:8000/api/livekit/token';
+import { createLiveKitToken, listDsaQuestions, login, signup } from './api/client.js';
+import { MeetingRoom } from './components/MeetingRoom.jsx';
+import { defaultInterviewSetup } from './config/interviewOptions.js';
+import { AuthScreen } from './screens/AuthScreen.jsx';
+import { PracticeSetup } from './screens/PracticeSetup.jsx';
 
-function MeetingRoom() {
-  const tracks = useTracks(
-    [
-      { source: Track.Source.Camera, withPlaceholder: true },
-      { source: Track.Source.Microphone, withPlaceholder: false },
-    ],
-    { onlySubscribed: false },
-  );
+const defaultAuthForm = {
+  name: '',
+  email: '',
+  password: '',
+};
 
-  return (
-    <main className="room-shell">
-      <section className="stage" aria-label="LiveKit meeting room">
-        <GridLayout tracks={tracks}>
-          <ParticipantTile />
-        </GridLayout>
-      </section>
-      <RoomAudioRenderer />
-      <div className="controls">
-        <ControlBar variation="minimal" />
-      </div>
-    </main>
-  );
+function toIdentity(profile) {
+  const source = profile?.email || profile?.name || '';
+  return source.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
 export default function App() {
-  const [form, setForm] = useState({
-    name: '',
-    room: 'demo-room',
-  });
+  const [authMode, setAuthMode] = useState('signin');
+  const [authForm, setAuthForm] = useState(defaultAuthForm);
+  const [profile, setProfile] = useState(null);
+  const [accessToken, setAccessToken] = useState('');
+  const [setup, setSetup] = useState(defaultInterviewSetup);
   const [joinData, setJoinData] = useState(null);
+  const [previewQuestion, setPreviewQuestion] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [questionStatus, setQuestionStatus] = useState('idle');
 
-  const canJoin = useMemo(
-    () => form.name.trim() && form.room.trim(),
-    [form.name, form.room],
-  );
+  const identity = useMemo(() => toIdentity(profile), [profile]);
 
-  async function joinMeeting(event) {
+  useEffect(() => {
+    if (!profile || !accessToken || setup.type !== 'dsa') {
+      setQuestionStatus('idle');
+      setPreviewQuestion(null);
+      return undefined;
+    }
+
+    const controller = new AbortController();
+
+    async function checkDsaQuestions() {
+      setQuestionStatus('checking');
+
+      try {
+        const questions = await listDsaQuestions({
+          accessToken,
+          company: setup.company,
+          difficulty: setup.difficulty,
+          level: setup.level,
+          limit: 1,
+        });
+        if (!controller.signal.aborted) {
+          setQuestionStatus(questions.length ? 'ready' : 'empty');
+          setPreviewQuestion(questions[0] || null);
+        }
+      } catch {
+        if (!controller.signal.aborted) {
+          setQuestionStatus('unknown');
+          setPreviewQuestion(null);
+        }
+      }
+    }
+
+    checkDsaQuestions();
+    return () => controller.abort();
+  }, [accessToken, profile, setup.company, setup.difficulty, setup.level, setup.type]);
+
+  async function submitAuth(event) {
     event.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      const response = await fetch(tokenEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          identity: form.name.trim().toLowerCase().replace(/\s+/g, '-'),
-          name: form.name.trim(),
-          room: form.room.trim(),
-        }),
+      const payload = {
+        name: authForm.name.trim(),
+        email: authForm.email.trim(),
+        password: authForm.password,
+      };
+      const data = authMode === 'signup'
+        ? await signup(payload)
+        : await login(payload);
+
+      setAccessToken(data.access_token);
+      setProfile(data.user);
+    } catch (err) {
+      setError(err.message || 'Unable to sign in right now');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function signOut() {
+    setProfile(null);
+    setAccessToken('');
+    setJoinData(null);
+    setError('');
+  }
+
+  async function startInterview(event) {
+    event.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const data = await createLiveKitToken({
+        accessToken,
+        identity: identity || 'practice-user',
+        name: profile.name,
+        room: setup.room.trim(),
+        interview: {
+          type: setup.type,
+          company: setup.company,
+          level: setup.level,
+          difficulty: setup.difficulty,
+        },
       });
 
-      if (!response.ok) {
-        throw new Error('Could not create LiveKit token');
+      let selectedQuestion = data.selected_question || previewQuestion;
+      if (!selectedQuestion && setup.type === 'dsa') {
+        const questions = await listDsaQuestions({
+          accessToken,
+          company: setup.company,
+          difficulty: setup.difficulty,
+          level: setup.level,
+          limit: 1,
+        });
+        selectedQuestion = questions[0] || null;
       }
 
-      const data = await response.json();
-      setJoinData(data);
+      setJoinData({
+        ...data,
+        selected_question: selectedQuestion,
+      });
     } catch (err) {
       setError(err.message || 'Unable to join right now');
     } finally {
@@ -88,45 +151,38 @@ export default function App() {
         audio
         data-lk-theme="default"
       >
-        <MeetingRoom />
+        <MeetingRoom
+          interview={setup}
+          selectedQuestion={joinData.selected_question}
+        />
       </LiveKitRoom>
     );
   }
 
+  if (!profile) {
+    return (
+      <AuthScreen
+        authMode={authMode}
+        form={authForm}
+        error={error}
+        loading={loading}
+        onModeChange={setAuthMode}
+        onFormChange={setAuthForm}
+        onSubmit={submitAuth}
+      />
+    );
+  }
+
   return (
-    <main className="join-shell">
-      <section className="join-visual" aria-hidden="true">
-        <img
-          src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80"
-          alt=""
-        />
-      </section>
-
-      <form className="join-form" onSubmit={joinMeeting}>
-        <h1>Join Meeting</h1>
-        <label>
-          Name
-          <input
-            value={form.name}
-            onChange={(event) => setForm({ ...form, name: event.target.value })}
-            placeholder="Your name"
-          />
-        </label>
-        <label>
-          Room
-          <input
-            value={form.room}
-            onChange={(event) => setForm({ ...form, room: event.target.value })}
-            placeholder="demo-room"
-          />
-        </label>
-
-        {error && <p className="error">{error}</p>}
-
-        <button type="submit" disabled={!canJoin || loading}>
-          {loading ? 'Joining...' : 'Join room'}
-        </button>
-      </form>
-    </main>
+    <PracticeSetup
+      profile={profile}
+      setup={setup}
+      error={error}
+      loading={loading}
+      questionStatus={questionStatus}
+      onSetupChange={setSetup}
+      onBack={signOut}
+      onStart={startInterview}
+    />
   );
 }

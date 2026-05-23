@@ -14,9 +14,14 @@ class AgentService:
             user_away_timeout=10.0,
         )
 
-    async def start_session(self, ctx: JobContext, session: AgentSession) -> None:
+    async def start_session(
+        self,
+        ctx: JobContext,
+        session: AgentSession,
+        interview_context: dict | None = None,
+    ) -> None:
         await session.start(
-            agent=MeetingAgent(),
+            agent=MeetingAgent(interview_context=interview_context),
             room=ctx.room,
             room_input_options=RoomInputOptions(
                 noise_cancellation=noise_cancellation.BVC(),
