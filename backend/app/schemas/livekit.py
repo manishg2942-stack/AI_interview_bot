@@ -8,6 +8,8 @@ class InterviewSetup(BaseModel):
     company: str = Field(..., min_length=1, max_length=100)
     level: str = Field(..., min_length=1, max_length=50)
     difficulty: str = Field(..., min_length=1, max_length=50)
+    design_question: str | None = Field(default=None, max_length=200)
+    resume_text: str | None = Field(default=None, max_length=8000)
 
 
 class TokenRequest(BaseModel):

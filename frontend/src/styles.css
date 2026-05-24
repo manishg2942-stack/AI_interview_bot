@@ -178,7 +178,8 @@ label {
 }
 
 input,
-select {
+select,
+.resume-fieldset textarea {
   width: 100%;
   min-height: 46px;
   border: 1px solid #b8c1b5;
@@ -193,9 +194,17 @@ select {
 }
 
 input:focus,
-select:focus {
+select:focus,
+.resume-fieldset textarea:focus {
   outline: 3px solid rgba(17, 105, 86, 0.2);
   border-color: #116956;
+}
+
+.resume-fieldset textarea {
+  min-height: 132px;
+  resize: vertical;
+  padding: 12px;
+  line-height: 1.5;
 }
 
 .primary-button,

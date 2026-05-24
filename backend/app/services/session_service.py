@@ -21,6 +21,8 @@ def save_interview_session(
             "company": interview.company,
             "level": interview.level,
             "difficulty": interview.difficulty,
+            "design_question": interview.design_question,
+            "has_resume_text": bool(interview.resume_text),
             "selected_question_id": selected_question_id,
             "created_at": datetime.now(UTC),
         }

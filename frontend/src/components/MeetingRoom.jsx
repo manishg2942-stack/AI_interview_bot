@@ -8,7 +8,17 @@ import {
 } from '@livekit/components-react';
 import { Track } from 'livekit-client';
 
-function buildStarterCode(question) {
+function buildStarterCode(question, interview) {
+  const designQuestion = interview?.designQuestion;
+
+  if (designQuestion && (interview?.type === 'lld' || interview?.type === 'hld')) {
+    return [
+      `// ${designQuestion}`,
+      '// Use this space for requirements, APIs, data model, components, and tradeoffs.',
+      '',
+    ].join('\n');
+  }
+
   if (!question) {
     return '// Write your notes or code here.\n';
   }
@@ -25,12 +35,16 @@ function buildStarterCode(question) {
 }
 
 export function MeetingRoom({ interview, selectedQuestion }) {
-  const [code, setCode] = useState(() => buildStarterCode(selectedQuestion));
+  const [code, setCode] = useState(() => buildStarterCode(selectedQuestion, interview));
   const [activeQuestionTab, setActiveQuestionTab] = useState('statement');
   const examples = selectedQuestion?.examples || [];
   const constraints = selectedQuestion?.constraints || [];
   const topics = selectedQuestion?.topics || [];
+  const isDesignInterview = interview?.type === 'lld' || interview?.type === 'hld';
+  const isBehavioralInterview = interview?.type === 'behavioral';
+  const designQuestion = interview?.designQuestion || '';
   const hasQuestion = Boolean(selectedQuestion);
+  const hasDesignQuestion = Boolean(isDesignInterview && designQuestion);
   const interviewLabel = useMemo(() => {
     if (!interview) {
       return 'Practice interview';
@@ -53,7 +67,7 @@ export function MeetingRoom({ interview, selectedQuestion }) {
           <span>Aisha Interview</span>
           <strong>{interviewLabel}</strong>
         </div>
-        <p>{hasQuestion ? selectedQuestion.title : 'Live practice room'}</p>
+        <p>{hasQuestion ? selectedQuestion.title : hasDesignQuestion ? designQuestion : 'Live practice room'}</p>
       </header>
 
       <div className="room-workspace">
@@ -72,7 +86,7 @@ export function MeetingRoom({ interview, selectedQuestion }) {
           <section className="question-panel">
             <div className="panel-heading">
               <p>{interviewLabel}</p>
-              <h1>{hasQuestion ? selectedQuestion.title : 'Live interview'}</h1>
+              <h1>{hasQuestion ? selectedQuestion.title : hasDesignQuestion ? designQuestion : 'Live interview'}</h1>
             </div>
 
             {hasQuestion ? (
@@ -145,6 +159,34 @@ export function MeetingRoom({ interview, selectedQuestion }) {
                   )}
                 </div>
               </>
+            ) : hasDesignQuestion ? (
+              <>
+                <div className="question-meta">
+                  <span>{interview.type.toUpperCase()}</span>
+                  <span>{interview.difficulty}</span>
+                  <span>{interview.level}</span>
+                </div>
+
+                <div className="question-content">
+                  <p className="question-text">
+                    Design problem selected for this session: {designQuestion}. Aisha will use this exact problem for the interview.
+                  </p>
+                </div>
+              </>
+            ) : isBehavioralInterview ? (
+              <>
+                <div className="question-meta">
+                  <span>Behavioral</span>
+                  <span>{interview.difficulty}</span>
+                  <span>{interview.level}</span>
+                </div>
+
+                <div className="question-content">
+                  <p className="question-text">
+                    Behavioral interview session. Aisha will use your selected company, level, and resume context if provided.
+                  </p>
+                </div>
+              </>
             ) : (
               <p className="question-text">
                 Aisha is ready. Use the notepad for rough work during the interview.
@@ -165,7 +207,7 @@ export function MeetingRoom({ interview, selectedQuestion }) {
                 <button type="button" onClick={() => setCode('')}>
                   Clear
                 </button>
-                <button type="button" onClick={() => setCode(buildStarterCode(selectedQuestion))}>
+                <button type="button" onClick={() => setCode(buildStarterCode(selectedQuestion, interview))}>
                   Reset
                 </button>
               </div>

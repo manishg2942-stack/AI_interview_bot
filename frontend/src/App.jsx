@@ -115,6 +115,8 @@ export default function App() {
           company: setup.company,
           level: setup.level,
           difficulty: setup.difficulty,
+          design_question: setup.designQuestion,
+          resume_text: setup.resumeText,
         },
       });
 
