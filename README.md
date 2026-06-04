@@ -2,14 +2,19 @@
 
 This is a local LiveKit AI voice interview app with a separated FastAPI backend and React frontend. Run three terminals: one for the agent worker, one for the backend API, and one for the frontend.
 
+Main folders:
+
+- `frontend/` contains the React/Vite user interface.
+- `backend/` contains the production-style backend API package.
+- `livekit-agent/` contains the LiveKit AI agent worker.
+- `env/` contains local-only environment files and secrets.
+
 Main files:
 
-- `src/__main__.py` creates STT, LLM, TTS, and starts the LiveKit worker.
-- `src/agents/meeting_agent.py` contains the interview agent.
-- `src/prompts/interview_prompt.py` controls the bot's interview behavior.
-- `backend/` contains the production-style backend API package.
-- `src/token_server.py` is a compatibility wrapper for older backend run commands.
-- `frontend/` contains the local React UI.
+- `livekit-agent/__main__.py` creates STT, LLM, TTS, and starts the LiveKit worker.
+- `livekit-agent/agents/meeting_agent.py` contains the interview agent.
+- `livekit-agent/prompts/interview_prompt.py` controls the bot's interview behavior.
+- `livekit-agent/token_server.py` is a compatibility wrapper for older backend run commands.
 
 Backend API structure:
 
@@ -45,7 +50,7 @@ Make sure your local MongoDB server is running before starting the backend.
 ## Run agent worker
 
 ```bat
-cd C:\Users\manish.gupta2\Desktop\bot\src
+cd C:\Users\manish.gupta2\Desktop\bot\livekit-agent
 ..\.venv\Scripts\python __main__.py dev
 ```
 

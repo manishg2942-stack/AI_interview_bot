@@ -34,6 +34,23 @@ function buildStarterCode(question, interview) {
   ].join('\n');
 }
 
+function hasItems(value) {
+  return Array.isArray(value) && value.length > 0;
+}
+
+function QuestionDetailSection({ title, children }) {
+  if (!children) {
+    return null;
+  }
+
+  return (
+    <section className="question-section">
+      <h2>{title}</h2>
+      {children}
+    </section>
+  );
+}
+
 export function MeetingRoom({ interview, selectedQuestion }) {
   const [code, setCode] = useState(() => buildStarterCode(selectedQuestion, interview));
   const [messageDraft, setMessageDraft] = useState('');
@@ -183,6 +200,77 @@ export function MeetingRoom({ interview, selectedQuestion }) {
 
             <div className="question-content">
               <p className="question-text">{questionStatement}</p>
+
+              {hasQuestion && (
+                <div className="question-detail-stack">
+                  <QuestionDetailSection title="Constraints">
+                    {hasItems(selectedQuestion.constraints) && (
+                      <ul className="constraint-list">
+                        {selectedQuestion.constraints.map((constraint) => (
+                          <li key={constraint}>{constraint}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </QuestionDetailSection>
+
+                  <QuestionDetailSection title="Examples / Test Cases">
+                    {hasItems(selectedQuestion.examples) && (
+                      <div className="example-list">
+                        {selectedQuestion.examples.map((example, index) => (
+                          <dl className="example-block" key={`${example.input}-${index}`}>
+                            <dt>Input</dt>
+                            <dd>{example.input}</dd>
+                            <dt>Output</dt>
+                            <dd>{example.output}</dd>
+                            {example.explanation && (
+                              <>
+                                <dt>Explanation</dt>
+                                <dd>{example.explanation}</dd>
+                              </>
+                            )}
+                          </dl>
+                        ))}
+                      </div>
+                    )}
+                  </QuestionDetailSection>
+
+                  {(selectedQuestion.expected_approach
+                    || selectedQuestion.time_complexity
+                    || selectedQuestion.space_complexity) && (
+                    <QuestionDetailSection title="Expected Approach">
+                      <div className="approach-block">
+                        {selectedQuestion.expected_approach && (
+                          <p>{selectedQuestion.expected_approach}</p>
+                        )}
+                        <div className="complexity-grid">
+                          {selectedQuestion.time_complexity && (
+                            <span>
+                              <strong>Time</strong>
+                              {selectedQuestion.time_complexity}
+                            </span>
+                          )}
+                          {selectedQuestion.space_complexity && (
+                            <span>
+                              <strong>Space</strong>
+                              {selectedQuestion.space_complexity}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </QuestionDetailSection>
+                  )}
+
+                  {hasItems(selectedQuestion.topics) && (
+                    <QuestionDetailSection title="Topics">
+                      <div className="topic-chip-list">
+                        {selectedQuestion.topics.map((topic) => (
+                          <span key={topic}>{topic}</span>
+                        ))}
+                      </div>
+                    </QuestionDetailSection>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </section>
