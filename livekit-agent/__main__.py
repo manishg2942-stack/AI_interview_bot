@@ -83,8 +83,8 @@ def prewarm(proc: JobProcess):
     proc.userdata["llm"] = google.LLM(
         model=llm_model,
         api_key=os.getenv("GOOGLE_API_KEY"),
-        temperature=0.6,
-        max_output_tokens=100,
+        temperature=0.5,
+        max_output_tokens=60,
     )
     proc.userdata["stt"] = google.STT(
         model=stt_model,

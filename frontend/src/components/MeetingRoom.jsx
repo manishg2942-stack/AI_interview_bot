@@ -1,12 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ControlBar,
-  GridLayout,
-  ParticipantTile,
   RoomAudioRenderer,
-  useTracks,
+  useDataChannel,
 } from '@livekit/components-react';
-import { Track } from 'livekit-client';
+
+const TRANSCRIPT_TOPIC = 'aisha.transcript';
+const INTERVIEW_DURATION_SECONDS = 5 * 60;
 
 function buildStarterCode(question, interview) {
   const designQuestion = interview?.designQuestion;
@@ -34,12 +34,31 @@ function buildStarterCode(question, interview) {
   ].join('\n');
 }
 
+function hasItems(value) {
+  return Array.isArray(value) && value.length > 0;
+}
+
+function QuestionDetailSection({ title, children }) {
+  if (!children) {
+    return null;
+  }
+
+  return (
+    <section className="question-section">
+      <h2>{title}</h2>
+      {children}
+    </section>
+  );
+}
+
 export function MeetingRoom({ interview, selectedQuestion }) {
   const [code, setCode] = useState(() => buildStarterCode(selectedQuestion, interview));
-  const [activeQuestionTab, setActiveQuestionTab] = useState('statement');
-  const examples = selectedQuestion?.examples || [];
-  const constraints = selectedQuestion?.constraints || [];
-  const topics = selectedQuestion?.topics || [];
+  const [messageDraft, setMessageDraft] = useState('');
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [transcriptMessages, setTranscriptMessages] = useState([]);
+  const [liveUserTranscript, setLiveUserTranscript] = useState('');
+  const transcriptEndRef = useRef(null);
+  const typewriterTimersRef = useRef(new Set());
   const isDesignInterview = interview?.type === 'lld' || interview?.type === 'hld';
   const isBehavioralInterview = interview?.type === 'behavioral';
   const designQuestion = interview?.designQuestion || '';
@@ -49,177 +68,293 @@ export function MeetingRoom({ interview, selectedQuestion }) {
     if (!interview) {
       return 'Practice interview';
     }
-    return `${interview.company} / ${interview.level} / ${interview.difficulty}`;
+    return `${interview.company} / ${interview.type?.toUpperCase() || 'Interview'}`;
   }, [interview]);
+  const interviewTitle = hasQuestion
+    ? selectedQuestion.title
+    : hasDesignQuestion
+      ? designQuestion
+      : isBehavioralInterview
+        ? 'Behavioral interview'
+        : 'Live interview';
+  const questionStatement = hasQuestion
+    ? selectedQuestion.question
+    : hasDesignQuestion
+      ? `Design problem selected for this session: ${designQuestion}. Aisha will use this exact problem for the interview.`
+      : isBehavioralInterview
+        ? 'Behavioral interview session. Aisha will use your selected company, level, and resume context if provided.'
+        : 'Aisha is ready. Use the notepad for rough work during the interview.';
 
-  const tracks = useTracks(
-    [
-      { source: Track.Source.Camera, withPlaceholder: true },
-      { source: Track.Source.Microphone, withPlaceholder: false },
-    ],
-    { onlySubscribed: false },
-  );
+  const addAssistantTranscript = useCallback((text) => {
+    const id = `${Date.now()}-${Math.random()}`;
+    const chunkSize = 4;
+    let cursor = 0;
+
+    setTranscriptMessages((messages) => [
+      ...messages,
+      { id, role: 'assistant', text: '', finalText: text },
+    ]);
+
+    const timer = window.setInterval(() => {
+      cursor += chunkSize;
+      setTranscriptMessages((messages) => messages.map((message) => (
+        message.id === id
+          ? { ...message, text: text.slice(0, cursor) }
+          : message
+      )));
+
+      if (cursor >= text.length) {
+        window.clearInterval(timer);
+        typewriterTimersRef.current.delete(timer);
+      }
+    }, 24);
+
+    typewriterTimersRef.current.add(timer);
+  }, []);
+
+  const handleTranscriptMessage = useCallback((message) => {
+    try {
+      const rawText = new TextDecoder().decode(message.payload);
+      const payload = JSON.parse(rawText);
+
+      if (payload.type !== 'transcript' || !payload.text) {
+        return;
+      }
+
+      if (payload.role === 'user') {
+        if (payload.is_final) {
+          setLiveUserTranscript('');
+          setTranscriptMessages((messages) => [
+            ...messages,
+            {
+              id: `${payload.ts || Date.now()}-user`,
+              role: 'user',
+              text: payload.text,
+            },
+          ]);
+        } else {
+          setLiveUserTranscript(payload.text);
+        }
+        return;
+      }
+
+      if (payload.role === 'assistant' && payload.is_final) {
+        addAssistantTranscript(payload.text);
+      }
+    } catch {
+      // Ignore non-transcript data messages from other LiveKit features.
+    }
+  }, [addAssistantTranscript]);
+
+  useDataChannel(TRANSCRIPT_TOPIC, handleTranscriptMessage);
+
+  useEffect(() => {
+    transcriptEndRef.current?.scrollIntoView({ block: 'end' });
+  }, [transcriptMessages, liveUserTranscript]);
+
+  useEffect(() => () => {
+    typewriterTimersRef.current.forEach((timer) => window.clearInterval(timer));
+    typewriterTimersRef.current.clear();
+  }, []);
+
+  useEffect(() => {
+    const startedAt = Date.now();
+    const timer = window.setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+      setElapsedSeconds(Math.min(elapsed, INTERVIEW_DURATION_SECONDS));
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  function formatTimer(totalSeconds) {
+    const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+    const seconds = String(totalSeconds % 60).padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  }
 
   return (
     <main className="room-shell">
       <header className="interview-header">
-        <div>
-          <span>Aisha Interview</span>
+        <div className="interview-clock">
+          <span>{formatTimer(elapsedSeconds)} / {formatTimer(INTERVIEW_DURATION_SECONDS)}</span>
+          <strong>{interview?.type?.toUpperCase() || 'INTERVIEW'}</strong>
+        </div>
+        <div className="interview-topic">
+          <span>Introduction</span>
           <strong>{interviewLabel}</strong>
         </div>
-        <p>{hasQuestion ? selectedQuestion.title : hasDesignQuestion ? designQuestion : 'Live practice room'}</p>
       </header>
 
       <div className="room-workspace">
-        <aside className="call-rail" aria-label="LiveKit meeting room">
-          <section className="stage">
-            <GridLayout tracks={tracks}>
-              <ParticipantTile />
-            </GridLayout>
-          </section>
-          <div className="controls">
-            <ControlBar variation="minimal" />
+        <section className="question-panel">
+          <div className="panel-titlebar">
+            <span>Question</span>
           </div>
-        </aside>
 
-        <section className="practice-workbench" aria-label="Interview question and coding notes">
-          <section className="question-panel">
+          <div className="question-scroll">
             <div className="panel-heading">
               <p>{interviewLabel}</p>
-              <h1>{hasQuestion ? selectedQuestion.title : hasDesignQuestion ? designQuestion : 'Live interview'}</h1>
+              <h1>{interviewTitle}</h1>
             </div>
 
-            {hasQuestion ? (
-              <>
-                <div className="question-meta">
-                  <span>{selectedQuestion.difficulty}</span>
-                  {topics.slice(0, 4).map((topic) => (
-                    <span key={topic}>{topic}</span>
-                  ))}
-                </div>
+            <div className="question-content">
+              <p className="question-text">{questionStatement}</p>
 
-                <div className="question-tabs" role="tablist" aria-label="Question details">
-                  <button
-                    type="button"
-                    className={activeQuestionTab === 'statement' ? 'active' : ''}
-                    onClick={() => setActiveQuestionTab('statement')}
-                  >
-                    Question
-                  </button>
-                  <button
-                    type="button"
-                    className={activeQuestionTab === 'examples' ? 'active' : ''}
-                    onClick={() => setActiveQuestionTab('examples')}
-                  >
-                    Examples
-                  </button>
-                  <button
-                    type="button"
-                    className={activeQuestionTab === 'constraints' ? 'active' : ''}
-                    onClick={() => setActiveQuestionTab('constraints')}
-                  >
-                    Constraints
-                  </button>
-                </div>
+              {hasQuestion && (
+                <div className="question-detail-stack">
+                  <QuestionDetailSection title="Constraints">
+                    {hasItems(selectedQuestion.constraints) && (
+                      <ul className="constraint-list">
+                        {selectedQuestion.constraints.map((constraint) => (
+                          <li key={constraint}>{constraint}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </QuestionDetailSection>
 
-                <div className="question-content">
-                  {activeQuestionTab === 'statement' && (
-                    <p className="question-text">{selectedQuestion.question}</p>
-                  )}
+                  <QuestionDetailSection title="Examples / Test Cases">
+                    {hasItems(selectedQuestion.examples) && (
+                      <div className="example-list">
+                        {selectedQuestion.examples.map((example, index) => (
+                          <dl className="example-block" key={`${example.input}-${index}`}>
+                            <dt>Input</dt>
+                            <dd>{example.input}</dd>
+                            <dt>Output</dt>
+                            <dd>{example.output}</dd>
+                            {example.explanation && (
+                              <>
+                                <dt>Explanation</dt>
+                                <dd>{example.explanation}</dd>
+                              </>
+                            )}
+                          </dl>
+                        ))}
+                      </div>
+                    )}
+                  </QuestionDetailSection>
 
-                  {activeQuestionTab === 'examples' && (
-                    <div className="question-section">
-                      {examples.length > 0 ? examples.slice(0, 3).map((example, index) => (
-                        <dl key={`${example.input}-${index}`} className="example-block">
-                          <dt>Input</dt>
-                          <dd>{example.input}</dd>
-                          <dt>Output</dt>
-                          <dd>{example.output}</dd>
-                          {example.explanation && (
-                            <>
-                              <dt>Why</dt>
-                              <dd>{example.explanation}</dd>
-                            </>
+                  {(selectedQuestion.expected_approach
+                    || selectedQuestion.time_complexity
+                    || selectedQuestion.space_complexity) && (
+                    <QuestionDetailSection title="Expected Approach">
+                      <div className="approach-block">
+                        {selectedQuestion.expected_approach && (
+                          <p>{selectedQuestion.expected_approach}</p>
+                        )}
+                        <div className="complexity-grid">
+                          {selectedQuestion.time_complexity && (
+                            <span>
+                              <strong>Time</strong>
+                              {selectedQuestion.time_complexity}
+                            </span>
                           )}
-                        </dl>
-                      )) : <p className="question-text">No examples available for this question.</p>}
-                    </div>
+                          {selectedQuestion.space_complexity && (
+                            <span>
+                              <strong>Space</strong>
+                              {selectedQuestion.space_complexity}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </QuestionDetailSection>
                   )}
 
-                  {activeQuestionTab === 'constraints' && (
-                    <div className="question-section">
-                      {constraints.length > 0 ? (
-                        <ul className="constraint-list">
-                          {constraints.map((constraint) => (
-                            <li key={constraint}>{constraint}</li>
-                          ))}
-                        </ul>
-                      ) : <p className="question-text">No constraints available for this question.</p>}
-                    </div>
+                  {hasItems(selectedQuestion.topics) && (
+                    <QuestionDetailSection title="Topics">
+                      <div className="topic-chip-list">
+                        {selectedQuestion.topics.map((topic) => (
+                          <span key={topic}>{topic}</span>
+                        ))}
+                      </div>
+                    </QuestionDetailSection>
                   )}
                 </div>
-              </>
-            ) : hasDesignQuestion ? (
-              <>
-                <div className="question-meta">
-                  <span>{interview.type.toUpperCase()}</span>
-                  <span>{interview.difficulty}</span>
-                  <span>{interview.level}</span>
-                </div>
-
-                <div className="question-content">
-                  <p className="question-text">
-                    Design problem selected for this session: {designQuestion}. Aisha will use this exact problem for the interview.
-                  </p>
-                </div>
-              </>
-            ) : isBehavioralInterview ? (
-              <>
-                <div className="question-meta">
-                  <span>Behavioral</span>
-                  <span>{interview.difficulty}</span>
-                  <span>{interview.level}</span>
-                </div>
-
-                <div className="question-content">
-                  <p className="question-text">
-                    Behavioral interview session. Aisha will use your selected company, level, and resume context if provided.
-                  </p>
-                </div>
-              </>
-            ) : (
-              <p className="question-text">
-                Aisha is ready. Use the notepad for rough work during the interview.
-              </p>
-            )}
-          </section>
-
-          <section className="code-panel">
-            <div className="code-toolbar">
-              <div>
-                <span>Code Notepad</span>
-                <p>JavaScript draft</p>
-              </div>
-              <div className="code-actions">
-                <button type="button" onClick={() => navigator.clipboard?.writeText(code)}>
-                  Copy
-                </button>
-                <button type="button" onClick={() => setCode('')}>
-                  Clear
-                </button>
-                <button type="button" onClick={() => setCode(buildStarterCode(selectedQuestion, interview))}>
-                  Reset
-                </button>
-              </div>
+              )}
             </div>
-            <textarea
-              aria-label="Coding notepad"
-              spellCheck="false"
-              value={code}
-              onChange={(event) => setCode(event.target.value)}
-            />
-          </section>
+          </div>
         </section>
+
+        <section className="code-panel">
+          <div className="code-toolbar">
+            <select aria-label="Language" defaultValue="notes">
+              <option value="notes">Notepad</option>
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+              <option value="cpp">C++</option>
+            </select>
+            <div className="code-actions">
+              <button type="button" className="run-button">
+                Run
+              </button>
+              <button type="button" className="submit-button" onClick={() => navigator.clipboard?.writeText(code)}>
+                Send notes
+              </button>
+            </div>
+          </div>
+          <textarea
+            aria-label="Coding notepad"
+            spellCheck="false"
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+          />
+        </section>
+
+        <aside className="call-rail" aria-label="Live interview transcript and controls">
+          <div className="participant-card interviewer-card">
+            <span>A</span>
+            <div>
+              <strong>Aisha</strong>
+              <p>Interviewer</p>
+            </div>
+          </div>
+          <div className="participant-card candidate-card">
+            <span>You</span>
+            <div>
+              <strong>You</strong>
+              <p>Candidate</p>
+            </div>
+          </div>
+
+          <section className="transcript-panel" aria-label="Live transcript">
+            <div className="transcript-heading">
+              <span>Live Transcript</span>
+              <p>Voice to text</p>
+            </div>
+            <div className="transcript-list">
+              {transcriptMessages.length === 0 && !liveUserTranscript && (
+                <p className="transcript-empty">Transcript will appear here as you speak.</p>
+              )}
+              {transcriptMessages.map((message) => (
+                <div key={message.id} className={`transcript-message ${message.role}`}>
+                  <span>{message.role === 'assistant' ? 'Aisha' : 'You'}</span>
+                  <p>{message.text}</p>
+                </div>
+              ))}
+              {liveUserTranscript && (
+                <div className="transcript-message user live">
+                  <span>You</span>
+                  <p>{liveUserTranscript}</p>
+                </div>
+              )}
+              <div ref={transcriptEndRef} />
+            </div>
+          </section>
+        </aside>
+      </div>
+
+      <form className="floating-composer" onSubmit={(event) => event.preventDefault()}>
+        <span>Mic</span>
+        <input
+          value={messageDraft}
+          onChange={(event) => setMessageDraft(event.target.value)}
+          placeholder="Speak or type a message..."
+        />
+        <button type="submit" aria-label="Send message">Send</button>
+      </form>
+
+      <div className="floating-controls">
+        <ControlBar variation="minimal" />
       </div>
       <RoomAudioRenderer />
     </main>

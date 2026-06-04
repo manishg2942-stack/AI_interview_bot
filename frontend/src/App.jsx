@@ -149,7 +149,7 @@ export default function App() {
         token={joinData.token}
         serverUrl={joinData.url}
         connect
-        video
+        video={false}
         audio
         data-lk-theme="default"
       >
