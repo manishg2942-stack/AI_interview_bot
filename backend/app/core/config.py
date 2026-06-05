@@ -14,6 +14,7 @@ class Settings:
     mongodb_url: str
     mongodb_db: str
     frontend_origins: list[str]
+    frontend_url: str
     auth_secret: str
     access_token_expire_minutes: int
 
@@ -25,12 +26,13 @@ class Settings:
     def __init__(self) -> None:
         self.mongodb_url = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
         self.mongodb_db = os.getenv("MONGODB_DB", "aisha_interview")
+        self.frontend_url = os.getenv("FRONTEND_URL", "https://ai-interview-bot-gold.vercel.app")
 
         self.frontend_origins = [
             origin.strip()
             for origin in os.getenv(
                 "FRONTEND_ORIGINS",
-                "http://localhost:5173,http://localhost:8000",
+                f"{self.frontend_url},http://localhost:5173,http://localhost:8000",
             ).split(",")
             if origin.strip()
         ]

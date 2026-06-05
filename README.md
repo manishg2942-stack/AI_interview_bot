@@ -44,6 +44,21 @@ MONGODB_DB=aisha_interview
 FRONTEND_ORIGINS=http://localhost:5173,http://localhost:8000
 ```
 
+For the deployed Vercel frontend, use:
+
+```env
+FRONTEND_URL=https://ai-interview-bot-gold.vercel.app
+FRONTEND_ORIGINS=https://ai-interview-bot-gold.vercel.app,http://localhost:5173,http://localhost:8000
+```
+
+For Vercel, set the frontend API origin as an environment variable:
+
+```env
+VITE_API_ORIGIN=https://your-backend-domain.example.com
+```
+
+The React app builds API URLs as `VITE_API_ORIGIN + /api + endpoint suffix`.
+
 The backend uses MongoDB collections named `users` and `interview_sessions`.
 Make sure your local MongoDB server is running before starting the backend.
 
