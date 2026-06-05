@@ -1,4 +1,4 @@
-const DEFAULT_API_ORIGIN = 'http://localhost:8000';
+const DEFAULT_API_ORIGIN = 'http://13.233.192.229:8000';
 const API_PATH_PREFIX = '/api';
 
 function trimTrailingSlash(value) {
