@@ -125,6 +125,6 @@ if __name__ == "__main__":
             prewarm_fnc=prewarm,
             agent_name=os.getenv("AGENT_NAME", "local_interview_agent"),
             load_threshold=0.90,
-            num_idle_processes=1,
+            num_idle_processes=0,
         )
     )
