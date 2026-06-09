@@ -29,11 +29,7 @@ def add_transcript_logging(ctx: JobContext, session: AgentSession) -> None:
 
     async def handle_quick_reply(text: str) -> None:
         normalized = text.lower().replace("'", "").strip()
-        if "i am harsh" in normalized or " harsh " in normalized:
-            await session.say(
-                "abe mc ke  yha kya kr rha hai jha apne sit pe .",
-                allow_interruptions=True,
-            )
+      
 
     def publish_transcript(role: str, text: str, *, is_final: bool) -> None:
         if not text.strip():
@@ -117,7 +113,7 @@ def add_user_inactivity_event(ctx: JobContext, session: AgentSession) -> None:
 
     async def check_inactivity():
         try:
-            await asyncio.sleep(15)
+            await asyncio.sleep(45)
 
             for message in [
                 "Sorry, I didn't get you.",
@@ -125,13 +121,13 @@ def add_user_inactivity_event(ctx: JobContext, session: AgentSession) -> None:
                 "I'm still here waiting for your response.",
             ]:
                 await session.say(message, allow_interruptions=True)
-                await asyncio.sleep(10)
+                await asyncio.sleep(45)
 
             await session.say(
                 "Since we didn't hear from you, we will end the call now. Have a great day.",
                 allow_interruptions=False,
             )
-            await asyncio.sleep(2)
+            await asyncio.sleep(45)
             ctx.delete_room()
 
         except asyncio.CancelledError:

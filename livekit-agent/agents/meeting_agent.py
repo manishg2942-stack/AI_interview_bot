@@ -36,9 +36,9 @@ class MeetingAgent(Agent):
 
         await self.session.say(
             text=(
-                f"Hi, I am {self.interviewer_name}. We will do a {difficulty} "
-                f"{interview_type} practice interview for {company}, {level}. "
-                "Let's begin with the first question."
-            ),
+              f"Hi, I am {self.interviewer_name}. "
+              "I'll be your interviewer today. "
+              "Let's begin."
+        ),
             allow_interruptions=True,
         )
