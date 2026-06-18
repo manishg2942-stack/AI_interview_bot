@@ -1,5 +1,4 @@
 from livekit.agents import AgentSession, JobContext, RoomInputOptions
-from livekit.plugins import noise_cancellation
 
 from agents.meeting_agent import MeetingAgent
 
@@ -10,6 +9,7 @@ class AgentService:
             stt=ctx.proc.userdata["stt"],
             llm=ctx.proc.userdata["llm"],
             tts=ctx.proc.userdata["tts"],
+            turn_detection=None,
             vad=ctx.proc.userdata["vad"],
             user_away_timeout=10.0,
         )
@@ -24,7 +24,6 @@ class AgentService:
             agent=MeetingAgent(interview_context=interview_context),
             room=ctx.room,
             room_input_options=RoomInputOptions(
-                noise_cancellation=noise_cancellation.BVC(),
                 close_on_disconnect=True,
                 delete_room_on_close=True,
             ),
