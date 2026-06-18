@@ -1,10 +1,17 @@
+import '@livekit/components-styles';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import '@livekit/components-styles';
-import App from './App.jsx';
-import './styles.css';
 
-createRoot(document.getElementById('root')).render(
+import App from './App.jsx';
+import './styles/global.css';
+
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('Root element not found');
+}
+
+createRoot(rootElement).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,

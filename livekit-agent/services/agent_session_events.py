@@ -1,5 +1,4 @@
 import asyncio
-import json
 import logging
 import time
 
@@ -13,80 +12,45 @@ from livekit.agents import (
 
 
 log = logging.getLogger("agent_events")
-TRANSCRIPT_TOPIC = "aisha.transcript"
 INTERVIEW_DURATION_SECONDS = 5 * 60
 
 
 def add_agent_session_events(ctx: JobContext, session: AgentSession) -> None:
     add_transcript_logging(ctx, session)
-    add_user_inactivity_event(ctx, session)
+   # add_user_inactivity_event(ctx, session)
     add_interview_timeout_event(ctx, session)
 
 
 def add_transcript_logging(ctx: JobContext, session: AgentSession) -> None:
     last_interim_sent_at = 0.0
+    speech_started_at = 0.0
     last_interim_text = ""
-
-    async def handle_quick_reply(text: str) -> None:
-        normalized = text.lower().replace("'", "").strip()
-        if "i am harsh" in normalized or " harsh " in normalized:
-            await session.say(
-                "abe mc ke  yha kya kr rha hai jha apne sit pe .",
-                allow_interruptions=True,
-            )
-
-    def publish_transcript(role: str, text: str, *, is_final: bool) -> None:
-        if not text.strip():
-            return
-
-        payload = json.dumps(
-            {
-                "type": "transcript",
-                "role": role,
-                "text": text.strip(),
-                "is_final": is_final,
-                "ts": time.time(),
-            },
-            separators=(",", ":"),
-        )
-
-        async def publish() -> None:
-            try:
-                await ctx.room.local_participant.publish_data(
-                    payload,
-                    reliable=is_final,
-                    topic=TRANSCRIPT_TOPIC,
-                )
-            except Exception:
-                log.exception("could not publish transcript data")
-
-        try:
-            asyncio.create_task(publish())
-        except RuntimeError:
-            log.debug("no running event loop for transcript publish")
 
     @session.on(event="user_input_transcribed")
     def user_input_transcribed(ev: UserInputTranscribedEvent) -> None:
-        nonlocal last_interim_sent_at, last_interim_text
+        nonlocal last_interim_sent_at, speech_started_at, last_interim_text
 
         text = ev.transcript.strip()
         if not text:
             return
 
-        if ev.is_final:
-            last_interim_text = ""
-            log.info("USER: %s", text)
-            publish_transcript("user", text, is_final=True)
-            asyncio.create_task(handle_quick_reply(text))
-            return
-
         now = time.monotonic()
-        if text == last_interim_text or now - last_interim_sent_at < 0.18:
+
+        if ev.is_final:
+            final_after = now - speech_started_at if speech_started_at else 0.0
+            log.info("USER final after %.2fs: %s", final_after, text)
+            speech_started_at = 0.0
+            last_interim_text = ""
             return
 
-        last_interim_sent_at = now
-        last_interim_text = text
-        publish_transcript("user", text, is_final=False)
+        if not speech_started_at:
+            speech_started_at = now
+            log.info("USER interim started: %s", text)
+
+        if text != last_interim_text and now - last_interim_sent_at >= 2.0:
+            last_interim_sent_at = now
+            last_interim_text = text
+            log.info("USER interim waiting %.2fs: %s", now - speech_started_at, text)
 
     @session.on(event="conversation_item_added")
     def conversation_item_added(ev: ConversationItemAddedEvent) -> None:
@@ -108,8 +72,6 @@ def add_transcript_logging(ctx: JobContext, session: AgentSession) -> None:
 
         if text:
             log.info("%s: %s", role.upper(), text)
-            if role == "assistant":
-                publish_transcript("assistant", text, is_final=True)
 
 
 def add_user_inactivity_event(ctx: JobContext, session: AgentSession) -> None:
@@ -117,7 +79,7 @@ def add_user_inactivity_event(ctx: JobContext, session: AgentSession) -> None:
 
     async def check_inactivity():
         try:
-            await asyncio.sleep(15)
+            await asyncio.sleep(4)
 
             for message in [
                 "Sorry, I didn't get you.",
@@ -125,13 +87,13 @@ def add_user_inactivity_event(ctx: JobContext, session: AgentSession) -> None:
                 "I'm still here waiting for your response.",
             ]:
                 await session.say(message, allow_interruptions=True)
-                await asyncio.sleep(10)
+                await asyncio.sleep(4)
 
             await session.say(
                 "Since we didn't hear from you, we will end the call now. Have a great day.",
                 allow_interruptions=False,
             )
-            await asyncio.sleep(2)
+            await asyncio.sleep(4)
             ctx.delete_room()
 
         except asyncio.CancelledError:

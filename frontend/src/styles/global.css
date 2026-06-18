@@ -656,6 +656,22 @@ legend {
   font-weight: 700;
 }
 
+.editor-settings,
+.font-size-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.font-size-control span {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.font-size-control select {
+  width: 82px;
+}
+
 .code-actions {
   display: flex;
   flex-wrap: wrap;
@@ -681,6 +697,29 @@ legend {
   background: #8f98a5;
 }
 
+.dsa-code-panel,
+.dsa-code-panel .code-toolbar {
+  background: #1e1e1e;
+  color: #e7e7e7;
+}
+
+.dsa-code-panel .code-toolbar {
+  border-bottom-color: #343434;
+}
+
+.dsa-code-panel .code-toolbar select {
+  border-color: #4b4b4b;
+  background: #2d2d30;
+  color: #f3f3f3;
+}
+
+.shortcut-hint {
+  color: #aeb4bd;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: help;
+}
+
 .code-panel textarea {
   width: 100%;
   height: 100%;
@@ -698,6 +737,21 @@ legend {
   font-size: 16px;
   line-height: 30px;
   tab-size: 2;
+}
+
+.monaco-editor-shell {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.editor-loading {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  color: #60706a;
+  font-weight: 700;
 }
 
 .transcript-panel {

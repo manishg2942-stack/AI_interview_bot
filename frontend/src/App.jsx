@@ -1,72 +1,37 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import { LiveKitRoom } from '@livekit/components-react';
+import React, { useMemo, useState } from 'react';
 
-import { createLiveKitToken, listDsaQuestions, login, signup } from './api/client.js';
-import { MeetingRoom } from './components/MeetingRoom.jsx';
-import { defaultInterviewSetup } from './config/interviewOptions.js';
-import { AuthScreen } from './screens/AuthScreen.jsx';
-import { PracticeSetup } from './screens/PracticeSetup.jsx';
+import { DEFAULT_INTERVIEW_SETUP } from './constants/interview.js';
+import { AuthPage } from './features/auth/AuthPage.jsx';
+import { useDsaQuestionPreview } from './features/interview/hooks/useDsaQuestionPreview.js';
+import { MeetingRoom } from './features/interview/room/MeetingRoom.jsx';
+import { InterviewSetupPage } from './features/interview/setup/InterviewSetupPage.jsx';
+import { login, signup } from './services/authService.js';
+import { createLiveKitToken, listDsaQuestions } from './services/interviewService.js';
+import { createUserIdentity, getErrorMessage } from './utils/helpers.js';
 
-const defaultAuthForm = {
+const DEFAULT_AUTH_FORM = {
   name: '',
   email: '',
   password: '',
 };
 
-function toIdentity(profile) {
-  const source = profile?.email || profile?.name || '';
-  return source.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-}
-
 export default function App() {
   const [authMode, setAuthMode] = useState('signin');
-  const [authForm, setAuthForm] = useState(defaultAuthForm);
+  const [authForm, setAuthForm] = useState(DEFAULT_AUTH_FORM);
   const [profile, setProfile] = useState(null);
   const [accessToken, setAccessToken] = useState('');
-  const [setup, setSetup] = useState(defaultInterviewSetup);
+  const [setup, setSetup] = useState(DEFAULT_INTERVIEW_SETUP);
   const [joinData, setJoinData] = useState(null);
-  const [previewQuestion, setPreviewQuestion] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [questionStatus, setQuestionStatus] = useState('idle');
 
-  const identity = useMemo(() => toIdentity(profile), [profile]);
-
-  useEffect(() => {
-    if (!profile || !accessToken || setup.type !== 'dsa') {
-      setQuestionStatus('idle');
-      setPreviewQuestion(null);
-      return undefined;
-    }
-
-    const controller = new AbortController();
-
-    async function checkDsaQuestions() {
-      setQuestionStatus('checking');
-
-      try {
-        const questions = await listDsaQuestions({
-          accessToken,
-          company: setup.company,
-          difficulty: setup.difficulty,
-          level: setup.level,
-          limit: 1,
-        });
-        if (!controller.signal.aborted) {
-          setQuestionStatus(questions.length ? 'ready' : 'empty');
-          setPreviewQuestion(questions[0] || null);
-        }
-      } catch {
-        if (!controller.signal.aborted) {
-          setQuestionStatus('unknown');
-          setPreviewQuestion(null);
-        }
-      }
-    }
-
-    checkDsaQuestions();
-    return () => controller.abort();
-  }, [accessToken, profile, setup.company, setup.difficulty, setup.level, setup.type]);
+  const identity = useMemo(() => createUserIdentity(profile), [profile]);
+  const { previewQuestion, questionStatus } = useDsaQuestionPreview({
+    enabled: Boolean(profile && accessToken),
+    accessToken,
+    setup,
+  });
 
   async function submitAuth(event) {
     event.preventDefault();
@@ -74,19 +39,18 @@ export default function App() {
     setLoading(true);
 
     try {
-      const payload = {
-        name: authForm.name.trim(),
+      const credentials = {
         email: authForm.email.trim(),
         password: authForm.password,
       };
       const data = authMode === 'signup'
-        ? await signup(payload)
-        : await login(payload);
+        ? await signup({ ...credentials, name: authForm.name.trim() })
+        : await login(credentials);
 
       setAccessToken(data.access_token);
       setProfile(data.user);
-    } catch (err) {
-      setError(err.message || 'Unable to sign in right now');
+    } catch (requestError) {
+      setError(getErrorMessage(requestError, 'Unable to sign in right now'));
     } finally {
       setLoading(false);
     }
@@ -101,6 +65,10 @@ export default function App() {
 
   async function startInterview(event) {
     event.preventDefault();
+    if (!profile) {
+      return;
+    }
+
     setError('');
     setLoading(true);
 
@@ -132,12 +100,9 @@ export default function App() {
         selectedQuestion = questions[0] || null;
       }
 
-      setJoinData({
-        ...data,
-        selected_question: selectedQuestion,
-      });
-    } catch (err) {
-      setError(err.message || 'Unable to join right now');
+      setJoinData({ ...data, selected_question: selectedQuestion });
+    } catch (requestError) {
+      setError(getErrorMessage(requestError, 'Unable to join right now'));
     } finally {
       setLoading(false);
     }
@@ -155,7 +120,7 @@ export default function App() {
       >
         <MeetingRoom
           interview={setup}
-          selectedQuestion={joinData.selected_question}
+          selectedQuestion={joinData.selected_question || null}
         />
       </LiveKitRoom>
     );
@@ -163,8 +128,8 @@ export default function App() {
 
   if (!profile) {
     return (
-      <AuthScreen
-        authMode={authMode}
+      <AuthPage
+        mode={authMode}
         form={authForm}
         error={error}
         loading={loading}
@@ -176,7 +141,7 @@ export default function App() {
   }
 
   return (
-    <PracticeSetup
+    <InterviewSetupPage
       profile={profile}
       setup={setup}
       error={error}

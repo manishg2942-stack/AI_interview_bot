@@ -1,9 +1,26 @@
 import React from 'react';
-import { BrandMark } from '../components/BrandMark.jsx';
 
-export function AuthScreen({ authMode, form, error, loading, onModeChange, onFormChange, onSubmit }) {
-  const isSignup = authMode === 'signup';
-  const canContinue = form.email.trim() && form.password.trim().length >= 6 && (!isSignup || form.name.trim());
+import { BrandMark } from '../../components/layout/BrandMark.jsx';
+
+export function AuthPage({
+  mode,
+  form,
+  error,
+  loading,
+  onModeChange,
+  onFormChange,
+  onSubmit,
+}) {
+  const isSignup = mode === 'signup';
+  const canContinue = Boolean(
+    form.email.trim()
+    && form.password.trim().length >= 6
+    && (!isSignup || form.name.trim()),
+  );
+
+  function updateField(field, value) {
+    onFormChange({ ...form, [field]: value });
+  }
 
   return (
     <main className="auth-shell">
@@ -20,12 +37,11 @@ export function AuthScreen({ authMode, form, error, loading, onModeChange, onFor
 
       <section className="auth-panel" aria-label={isSignup ? 'Create account' : 'Sign in'}>
         <BrandMark />
-
         <div className="auth-card">
           <div className="segmented" role="tablist" aria-label="Authentication mode">
             <button
               type="button"
-              className={authMode === 'signin' ? 'active' : ''}
+              className={mode === 'signin' ? 'active' : ''}
               onClick={() => onModeChange('signin')}
             >
               Sign in
@@ -50,7 +66,7 @@ export function AuthScreen({ authMode, form, error, loading, onModeChange, onFor
                 Full name
                 <input
                   value={form.name}
-                  onChange={(event) => onFormChange({ ...form, name: event.target.value })}
+                  onChange={(event) => updateField('name', event.target.value)}
                   placeholder="Manish Gupta"
                   autoComplete="name"
                 />
@@ -62,7 +78,7 @@ export function AuthScreen({ authMode, form, error, loading, onModeChange, onFor
               <input
                 type="email"
                 value={form.email}
-                onChange={(event) => onFormChange({ ...form, email: event.target.value })}
+                onChange={(event) => updateField('email', event.target.value)}
                 placeholder="you@example.com"
                 autoComplete="email"
               />
@@ -73,14 +89,13 @@ export function AuthScreen({ authMode, form, error, loading, onModeChange, onFor
               <input
                 type="password"
                 value={form.password}
-                onChange={(event) => onFormChange({ ...form, password: event.target.value })}
+                onChange={(event) => updateField('password', event.target.value)}
                 placeholder="Minimum 6 characters"
                 autoComplete={isSignup ? 'new-password' : 'current-password'}
               />
             </label>
 
             {error && <p className="error">{error}</p>}
-
             <button className="primary-button" type="submit" disabled={!canContinue || loading}>
               {loading ? 'Please wait...' : isSignup ? 'Create account' : 'Sign in'}
             </button>
