@@ -66,9 +66,9 @@ Ask the candidate to restart after selecting a valid setup.
 
 Use ONLY this question.
 
-Company: {text_value(interview.get("company"))}
-Level: {text_value(interview.get("level"))}
-Difficulty: {text_value(selected_question.get("difficulty") or interview.get("difficulty"))}
+# Company: {text_value(interview.get("company"))}
+# Level: {text_value(interview.get("level"))}
+# Difficulty: {text_value(selected_question.get("difficulty") or interview.get("difficulty"))}
 
 Title:
 {text_value(selected_question.get("title"))}
