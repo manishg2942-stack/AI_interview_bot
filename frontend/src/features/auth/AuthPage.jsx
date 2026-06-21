@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { BrandMark } from '../../components/layout/BrandMark.jsx';
+//const googleClientId = "341855789128-dub710ttmqudn0hfr2s59d6ovq331iu9.apps.googleusercontent.com";
+
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+
 
 export function AuthPage({
   mode,
@@ -10,13 +15,64 @@ export function AuthPage({
   onModeChange,
   onFormChange,
   onSubmit,
+  onGoogleCredential,
 }) {
   const isSignup = mode === 'signup';
+  const googleButtonRef = useRef(null);
+  const [googleUnavailable, setGoogleUnavailable] = useState(false);
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const canContinue = Boolean(
     form.email.trim()
     && form.password.trim().length >= 6
     && (!isSignup || form.name.trim()),
   );
+
+  useEffect(() => {
+    if (!googleClientId) {
+      return undefined;
+    }
+
+    let cancelled = false;
+
+    function renderGoogleButton() {
+      if (cancelled || !window.google || !googleButtonRef.current) {
+        return;
+      }
+
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: (response) => {
+          if (response.credential) {
+            onGoogleCredential(response.credential);
+          }
+        },
+      });
+      window.google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: 'outline',
+        size: 'large',
+        width: googleButtonRef.current.offsetWidth || 320,
+      });
+    }
+
+    if (window.google?.accounts?.id) {
+      renderGoogleButton();
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = renderGoogleButton;
+    script.onerror = () => setGoogleUnavailable(true);
+    document.head.appendChild(script);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [googleClientId, onGoogleCredential]);
 
   function updateField(field, value) {
     onFormChange({ ...form, [field]: value });
@@ -27,11 +83,23 @@ export function AuthPage({
       <section className="auth-visual" aria-label="Interview practice workspace">
         <img
           src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80"
+        // src="https://www.magnific.com/free-photos-vectors/ai-job-interview?auto=format&fit=crop&w=1400&q=80"
           alt=""
         />
+       
         <div className="visual-copy">
-          <p>AI interview practice</p>
-          <h1>Prepare with a focused voice interview before the real one.</h1>
+           
+          <h1>CODINGACE </h1>
+          <h2>AI INTERVIEW PLATFORM</h2>
+
+          <h2>
+            Practice Real Technical Interviews with AI.
+          </h2>
+
+          <p>
+            Sharpen your coding, system design, and behavioral skills through
+            realistic AI-powered interview simulations designed for software engineers.
+          </p>
         </div>
       </section>
 
@@ -99,6 +167,16 @@ export function AuthPage({
             <button className="primary-button" type="submit" disabled={!canContinue || loading}>
               {loading ? 'Please wait...' : isSignup ? 'Create account' : 'Sign in'}
             </button>
+
+            {googleClientId && (
+              <div className="google-auth-section">
+                <div className="auth-divider"><span>or</span></div>
+                <div ref={googleButtonRef} className="google-button-slot" />
+                {googleUnavailable && (
+                  <p className="auth-help">Google sign-in could not load. Use email/password for now.</p>
+                )}
+              </div>
+            )}
           </form>
         </div>
       </section>

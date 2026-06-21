@@ -10,8 +10,8 @@ class DeepgramSTT:
 
         return inference.STT(
             model=model,
-            language=language,
-            no_delay=True
+            language=language
+            
             
             
         )

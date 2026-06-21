@@ -1,5 +1,6 @@
-const DEFAULT_API_ORIGIN = 'https://api.codingace.online';
-const API_BASE_URL = `${(import.meta.env.VITE_API_ORIGIN || DEFAULT_API_ORIGIN).replace(/\/+$/, '')}/api`;
+//const DEFAULT_API_ORIGIN = 'https://api.codingace.online';
+const DEFAULT_API_ORIGIN = 'http://localhost:8000';
+const API_BASE_URL = `${( DEFAULT_API_ORIGIN).replace(/\/+$/, '')}/api`;
 
 export async function apiRequest(path, options) {
   const response = await fetch(`${API_BASE_URL}${path}`, options);

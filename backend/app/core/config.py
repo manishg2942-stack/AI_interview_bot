@@ -22,11 +22,12 @@ class Settings:
     livekit_api_key: str | None
     livekit_api_secret: str | None
     agent_name: str | None
+    google_client_id: str | None
 
     def __init__(self) -> None:
         self.mongodb_url = os.getenv("MONGODB_URL", "mongodb+srv://manishg2942_db_user:aOHaKFBaOvsFj9ov@cluster0.zksaowg.mongodb.net/")
         self.mongodb_db = os.getenv("MONGODB_DB", "aisha_interview")
-        self.frontend_url = os.getenv("FRONTEND_URL", "https://ai-interview-bot-gold.vercel.app")
+        self.frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
         self.frontend_origins = [
             origin.strip()
@@ -43,6 +44,7 @@ class Settings:
         self.livekit_api_key = os.getenv("LIVEKIT_API_KEY")
         self.livekit_api_secret = os.getenv("LIVEKIT_API_SECRET")
         self.agent_name = os.getenv("AGENT_NAME")
+        self.google_client_id = os.getenv("GOOGLE_CLIENT_ID")
 
 
 settings = Settings()
