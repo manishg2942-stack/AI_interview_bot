@@ -1,18 +1,38 @@
 import json
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from livekit import api
 from pymongo.database import Database
 
 from app.api.deps import get_current_user
 from app.core.config import settings
 from app.db.session import get_db
-from app.schemas.livekit import TokenRequest, TokenResponse
+from app.schemas.livekit import (
+    CompleteLiveKitSessionRequest,
+    LiveKitSessionPublic,
+    TokenRequest,
+    TokenResponse,
+)
+from app.services.interview_feedback_domain_service import InterviewFeedbackDomainService
 from app.services.dsa_question_service import select_dsa_question_for_interview
-from app.services.session_service import save_interview_session
+from app.services.session_service import list_interview_sessions_for_user, save_interview_session
 
 
 router = APIRouter()
+
+
+@router.get("/sessions", response_model=list[LiveKitSessionPublic])
+def list_my_livekit_sessions(
+    limit: int = 50,
+    current_user: dict[str, object] = Depends(get_current_user),
+    db: Database = Depends(get_db),
+) -> list[dict[str, object]]:
+    safe_limit = min(max(limit, 1), 100)
+    return list_interview_sessions_for_user(
+        db,
+        user_id=str(current_user["id"]),
+        limit=safe_limit,
+    )
 
 
 def _identity_for(user: dict[str, object], requested_identity: str | None) -> str:
@@ -72,7 +92,7 @@ async def create_livekit_token(
         .to_jwt()
     )
 
-    save_interview_session(
+    session = save_interview_session(
         db,
         user_id=str(current_user["id"]),
         room=request.room,
@@ -104,5 +124,28 @@ async def create_livekit_token(
         token=token,
         room=request.room,
         identity=identity,
+        session_id=str(session["id"]),
         selected_question=selected_question,
     )
+
+
+@router.post("/sessions/{session_id}/complete", response_model=LiveKitSessionPublic)
+async def complete_livekit_session(
+    session_id: str,
+    payload: CompleteLiveKitSessionRequest,
+    background_tasks: BackgroundTasks,
+    current_user: dict[str, object] = Depends(get_current_user),
+    db: Database = Depends(get_db),
+) -> dict[str, object]:
+    service = InterviewFeedbackDomainService(db)
+    session = service.start_livekit_session_completion(
+        session_id=session_id,
+        user_id=str(current_user["id"]),
+        payload=payload,
+    )
+    background_tasks.add_task(
+        service.generate_livekit_feedback,
+        session_id=session_id,
+        user_id=str(current_user["id"]),
+    )
+    return session

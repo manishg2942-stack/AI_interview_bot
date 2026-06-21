@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { BrandMark } from '../../../components/layout/BrandMark.jsx';
 import { OptionButton } from '../../../components/ui/OptionButton.jsx';
@@ -22,7 +22,11 @@ export function InterviewSetupPage({
   onSetupChange,
   onBack,
   onStart,
+  onProfileUpdate,
+  embedded = false,
 }) {
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [profileName, setProfileName] = useState(profile.name);
   const isDesignInterview = setup.type === 'lld' || setup.type === 'hld';
   const isBehavioralInterview = setup.type === 'behavioral';
   const designQuestions = setup.type === 'hld' ? HLD_QUESTIONS : LLD_QUESTIONS;
@@ -40,6 +44,21 @@ export function InterviewSetupPage({
     onSetupChange({ ...setup, [field]: value });
   }
 
+  useEffect(() => {
+    setProfileName(profile.name);
+  }, [profile.name]);
+
+  async function submitProfileUpdate(event) {
+    event.preventDefault();
+    if (!profileName.trim() || profileName.trim() === profile.name) {
+      setEditingProfile(false);
+      return;
+    }
+
+    await onProfileUpdate({ name: profileName });
+    setEditingProfile(false);
+  }
+
   function changeInterviewType(nextType) {
     const nextDesignQuestion = nextType === 'hld' ? HLD_QUESTIONS[0] : LLD_QUESTIONS[0];
     onSetupChange({
@@ -51,17 +70,44 @@ export function InterviewSetupPage({
     });
   }
 
-  return (
-    <main className="setup-shell">
-      <header className="topbar">
-        <BrandMark />
-        <button type="button" className="ghost-button" onClick={onBack}>Sign out</button>
-      </header>
-
-      <section className="setup-grid">
+  const content = (
+      <section className={`setup-grid${embedded ? ' embedded-setup-grid' : ''}`}>
         <aside className="profile-panel">
           <p>Signed in as</p>
-          <h1>{profile.name}</h1>
+          {editingProfile ? (
+            <form className="profile-edit-form" onSubmit={submitProfileUpdate}>
+              <label>
+                Display name
+                <input
+                  value={profileName}
+                  onChange={(event) => setProfileName(event.target.value)}
+                  autoComplete="name"
+                />
+              </label>
+              <div className="profile-edit-actions">
+                <button type="submit" className="primary-button" disabled={loading || profileName.trim().length < 2}>
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={() => {
+                    setProfileName(profile.name);
+                    setEditingProfile(false);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <h1>{profile.name}</h1>
+              <button type="button" className="text-button" onClick={() => setEditingProfile(true)}>
+                Edit profile
+              </button>
+            </>
+          )}
           <span>{profile.email}</span>
         </aside>
 
@@ -144,6 +190,20 @@ export function InterviewSetupPage({
           </button>
         </form>
       </section>
+  );
+
+  if (embedded) {
+    return content;
+  }
+
+  return (
+    <main className="setup-shell">
+      <header className="topbar">
+        <BrandMark />
+        <button type="button" className="ghost-button" onClick={onBack}>Sign out</button>
+      </header>
+
+      {content}
     </main>
   );
 }

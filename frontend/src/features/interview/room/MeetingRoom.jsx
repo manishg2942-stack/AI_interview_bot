@@ -1,5 +1,5 @@
-import { ControlBar, RoomAudioRenderer } from '@livekit/components-react';
-import React, { useMemo, useState } from 'react';
+import { ControlBar, RoomAudioRenderer, useRoomContext } from '@livekit/components-react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { INTERVIEW_DURATION_SECONDS } from '../../../constants/editor.js';
 import { formatDuration, useInterviewTimer } from '../hooks/useInterviewTimer.js';
@@ -9,11 +9,13 @@ import { CodeEditorPanel } from './CodeEditorPanel.jsx';
 import { QuestionPanel } from './QuestionPanel.jsx';
 import { buildStarterCode, getQuestionContent } from './questionContent.js';
 
-export function MeetingRoom({ interview, selectedQuestion }) {
+export function MeetingRoom({ interview, selectedQuestion, onInterviewSnapshot }) {
   const [code, setCode] = useState(() => buildStarterCode(selectedQuestion, interview));
   const [messageDraft, setMessageDraft] = useState('');
   const elapsedSeconds = useInterviewTimer(INTERVIEW_DURATION_SECONDS);
   const { messages, liveUserTranscript, transcriptEndRef } = useTranscript();
+  const room = useRoomContext();
+  const autoEndedRef = useRef(false);
   const isDsaInterview = interview.type === 'dsa';
 
   const interviewLabel = useMemo(
@@ -24,6 +26,22 @@ export function MeetingRoom({ interview, selectedQuestion }) {
     () => getQuestionContent(interview, selectedQuestion),
     [interview, selectedQuestion],
   );
+
+  useEffect(() => {
+    onInterviewSnapshot?.({
+      duration: elapsedSeconds,
+      messages,
+    });
+  }, [elapsedSeconds, messages, onInterviewSnapshot]);
+
+  useEffect(() => {
+    if (elapsedSeconds < INTERVIEW_DURATION_SECONDS || autoEndedRef.current) {
+      return;
+    }
+
+    autoEndedRef.current = true;
+    room.disconnect();
+  }, [elapsedSeconds, room]);
 
   return (
     <main className="room-shell">

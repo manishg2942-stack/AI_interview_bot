@@ -12,10 +12,20 @@ class UserLogin(BaseModel):
     password: str
 
 
+class GoogleAuthRequest(BaseModel):
+    id_token: str = Field(..., min_length=20)
+
+
+class UserProfileUpdate(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+
+
 class UserPublic(BaseModel):
     id: str
     name: str
     email: str
+    picture_url: str | None = None
+    auth_provider: str = "password"
 
 
 class AuthResponse(BaseModel):
