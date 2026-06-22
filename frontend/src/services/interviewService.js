@@ -82,9 +82,9 @@ export function createLiveKitToken({
   });
 }
 
-export function getLiveCounts({ accessToken, signal } = {}) {
+export function getLiveCounts(accessToken) {
   return apiRequest('/livekit/live-counts', {
-    headers: accessToken ? createAuthHeaders(accessToken) : undefined,
-    signal,
-  }).catch(() => null);
+    headers: createAuthHeaders(accessToken),
+    cache: 'no-store',
+  });
 }

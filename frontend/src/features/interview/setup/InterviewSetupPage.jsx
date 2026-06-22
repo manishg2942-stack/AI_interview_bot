@@ -25,6 +25,7 @@ export function InterviewSetupPage({
   onBack,
   onStart,
   onProfileUpdate,
+  accessToken,
   embedded = false,
 }) {
   const [editingProfile, setEditingProfile] = useState(false);
@@ -88,7 +89,7 @@ export function InterviewSetupPage({
 
     async function fetchCounts() {
       try {
-        const raw = await getLiveCounts();
+        const raw = await getLiveCounts( accessToken );
         if (!mounted) return;
         if (raw) {
           setLiveCounts({
@@ -110,7 +111,7 @@ export function InterviewSetupPage({
       mounted = false;
       clearInterval(intervalId);
     };
-  }, []);
+  }, [accessToken]);
 
   const content = (
       <section className={`setup-grid${embedded ? ' embedded-setup-grid' : ''}`}>
