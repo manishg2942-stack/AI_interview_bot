@@ -1,0 +1,163 @@
+.setup-shell {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #edf4ee 0, #f7f8f4 42%, #eef2ee 100%);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px clamp(18px, 4vw, 48px);
+  border-bottom: 1px solid #dae2d8;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.setup-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 820px);
+  gap: 24px;
+  width: min(100% - 36px, 1180px);
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 58px) 0;
+}
+
+.embedded-setup-grid {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+}
+
+.profile-panel {
+  align-self: start;
+  padding: 24px;
+  border: 1px solid rgba(23, 32, 27, 0.08);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.profile-panel p {
+  color: #116956;
+}
+
+.profile-panel h1 {
+  margin: 0 0 8px;
+  font-size: 26px;
+  line-height: 1.15;
+}
+
+.profile-panel span {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #607067;
+}
+
+.profile-edit-form {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.profile-edit-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.option-card {
+  display: grid;
+  gap: 8px;
+  min-height: 104px;
+  padding: 16px;
+  border: 1px solid #cdd8ca;
+  border-radius: 8px;
+  background: #fbfcfa;
+  color: #17201b;
+  cursor: pointer;
+}
+
+.option-card span {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.option-card small {
+  color: #5f7067;
+  line-height: 1.4;
+}
+
+.option-card.selected {
+  border-color: #116956;
+  background: #e7f3ed;
+}
+
+.option-card-badge {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #0bb04b;
+  color: white;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.option-card-dot {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0bb04b;
+  box-shadow: 0 0 0 4px rgba(11,176,75,0.12);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.resume-fieldset {
+  padding: 20px;
+  border: 1px solid #d7dfd5;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.resume-fieldset textarea {
+  min-height: 132px;
+  resize: vertical;
+  padding: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .setup-grid,
+  .embedded-setup-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .topbar {
+    flex-direction: column;
+  }
+
+  .ghost-button {
+    width: 100%;
+  }
+}

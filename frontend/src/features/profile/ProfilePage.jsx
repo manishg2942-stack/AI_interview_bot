@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../../styles/profile.css';
 
 export function ProfilePage({ profile, loading, onSave }) {
   const [name, setName] = useState(profile.name);

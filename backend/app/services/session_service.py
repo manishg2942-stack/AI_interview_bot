@@ -193,3 +193,23 @@ def _object_id(value: str) -> ObjectId | None:
         return ObjectId(value)
     except InvalidId:
         return None
+def mark_session_abandoned_by_room(db: Database, *, room: str) -> dict[str, object] | None:
+    document = db.interview_sessions.find_one_and_update(
+        {"room": room, "status": "in_progress"},
+        {"$set": {"status": "abandoned", "ended_at": datetime.now(UTC)}},
+        return_document=ReturnDocument.AFTER,
+    )
+    return _session_to_public(document) if document else None
+
+def get_live_interview_counts(db: Database) -> dict[str, object]:
+    pipeline = [
+        {"$match": {"status": "in_progress"}},
+        {"$group": {"_id": "$interview_type", "count": {"$sum": 1}}},
+    ]
+    rows = list(db.interview_sessions.aggregate(pipeline))
+
+    result = {row["_id"]: row["count"] for row in rows}
+    for t in ["dsa", "hr", "lld"]:
+        result.setdefault(t, 0)
+    result["total"] = sum(v for k, v in result.items() if k != "total")
+    return result

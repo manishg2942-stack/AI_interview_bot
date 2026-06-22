@@ -1,0 +1,235 @@
+/* Code editor styles - modern, responsive, accessible */
+.code-editor-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: transparent;
+  color: #17201b;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toolbar-left,
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-left select,
+.toolbar-right select,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid #d6e0d7;
+  background: #f3f6f3;
+  color: #17201b;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.toolbar-left select,
+.toolbar-right select {
+  min-width: 100px;
+  appearance: none;
+}
+
+.toolbar-left select:hover,
+.toolbar-right select:hover,
+.btn:hover {
+  background: #e8f0e8;
+  border-color: #c0cec0;
+}
+
+.btn:hover {
+  background: #e8f0e8;
+  border-color: #c0cec0;
+}
+
+.btn.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #0a8a63, #039365);
+  color: #fff;
+  border: 1px solid #039365;
+  font-weight: 700;
+}
+
+.btn.primary:hover {
+  background: linear-gradient(90deg, #0a7555, #027a54);
+}
+
+.btn:focus {
+  outline: 3px solid rgba(17, 105, 86, 0.18);
+}
+
+.editor-body {
+  display: block;
+}
+
+.monaco-shell {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e6ede6;
+}
+
+.editor-loading {
+  padding: 36px;
+  display: grid;
+  place-items: center;
+  color: #68786f;
+}
+
+.simple-notepad {
+  width: 100%;
+  min-height: 240px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #e6ede6;
+  background: #fffdf9;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Cascadia Code', monospace;
+}
+
+.output-panel {
+  border-top: 1px solid #e6ede6;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+.output-panel h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #17201b;
+}
+
+.test-cases-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  padding-right: 4px;
+}
+
+.test-cases-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.test-cases-container::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 3px;
+}
+
+.test-cases-container::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 3px;
+}
+
+.test-cases-container::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+.test-case-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 10px;
+  background: #fafafa;
+  font-size: 13px;
+}
+
+.test-case-item.hidden {
+  background: #f0f0f0;
+  opacity: 0.7;
+}
+
+.test-case-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.test-case-name {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.test-case-status {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f0f0f0;
+}
+
+.test-case-status.passed {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.test-case-output {
+  font-family: ui-monospace, Menlo, Monaco, monospace;
+  color: #444;
+  line-height: 1.4;
+}
+
+.test-case-output .label {
+  font-weight: 700;
+  color: #666;
+}
+
+.test-case-divider {
+  font-size: 12px;
+  font-weight: 700;
+  color: #999;
+  padding: 6px 0;
+  margin: 4px 0;
+  border-top: 1px solid #ddd;
+}
+
+.editor-statusbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end;
+  font-weight: 800;
+  color: #4f5e56;
+  font-size: 13px;
+}
+
+.status-message {
+  margin-left: auto;
+  color: #116956;
+}
+
+.visually-hidden { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
+
+@media (max-width: 860px) {
+  .toolbar-left,
+  .toolbar-right { gap: 6px; }
+  .toolbar-right { flex-wrap: wrap; }
+  .editor-statusbar { font-size: 12px; }
+}

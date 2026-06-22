@@ -1,5 +1,6 @@
 import { ControlBar, RoomAudioRenderer, useRoomContext } from '@livekit/components-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import '../../../styles/room.css';
 
 import { INTERVIEW_DURATION_SECONDS } from '../../../constants/editor.js';
 import { formatDuration, useInterviewTimer } from '../hooks/useInterviewTimer.js';
@@ -12,6 +13,7 @@ import { buildStarterCode, getQuestionContent } from './questionContent.js';
 export function MeetingRoom({ interview, selectedQuestion, onInterviewSnapshot }) {
   const [code, setCode] = useState(() => buildStarterCode(selectedQuestion, interview));
   const [messageDraft, setMessageDraft] = useState('');
+  const [showTranscript, setShowTranscript] = useState(true);
   const elapsedSeconds = useInterviewTimer(INTERVIEW_DURATION_SECONDS);
   const { messages, liveUserTranscript, transcriptEndRef } = useTranscript();
   const room = useRoomContext();
@@ -69,11 +71,15 @@ export function MeetingRoom({ interview, selectedQuestion, onInterviewSnapshot }
           isDsaInterview={isDsaInterview}
           code={code}
           onCodeChange={setCode}
+          showTranscript={showTranscript}
+          onToggleTranscript={() => setShowTranscript(!showTranscript)}
         />
         <CallRail
           messages={messages}
           liveUserTranscript={liveUserTranscript}
           transcriptEndRef={transcriptEndRef}
+          showTranscript={showTranscript}
+          onToggleTranscript={() => setShowTranscript(!showTranscript)}
         />
       </div>
 

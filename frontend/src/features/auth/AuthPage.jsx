@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import '../../styles/auth.css';
 
 import { BrandMark } from '../../components/layout/BrandMark.jsx';
 //const googleClientId = "341855789128-dub710ttmqudn0hfr2s59d6ovq331iu9.apps.googleusercontent.com";

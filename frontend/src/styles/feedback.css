@@ -1,0 +1,73 @@
+.feedback-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.5fr);
+  gap: 18px;
+}
+
+.feedback-session-card {
+  width: 100%;
+  text-align: left;
+  padding: 16px;
+  border: 1px solid #dce6da;
+  border-radius: 18px;
+  background: #fbfcfa;
+}
+
+.feedback-session-card strong {
+  color: #17201b;
+}
+
+.feedback-session-card span {
+  display: block;
+  margin-top: 6px;
+  color: #68786f;
+  font-size: 13px;
+}
+
+.feedback-session-card.active {
+  border-color: #116956;
+  background: #e7f3ed;
+}
+
+.feedback-detail-card {
+  min-height: 420px;
+}
+
+.feedback-loading-state {
+  min-height: 300px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding: 32px;
+  text-align: center;
+}
+
+.feedback-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #dce6da;
+  border-top-color: #116956;
+  border-radius: 50%;
+  animation: feedback-spin 0.9s linear infinite;
+}
+
+@keyframes feedback-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.feedback-list {
+  display: grid;
+  gap: 12px;
+}
+
+.feedback-list h4 {
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .feedback-layout {
+    grid-template-columns: 1fr;
+  }
+}

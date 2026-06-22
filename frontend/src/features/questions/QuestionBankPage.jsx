@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../../styles/questions.css';
 
 import { COMPANIES, DIFFICULTIES, LEVELS } from '../../constants/interview.js';
 import { listDsaQuestions } from '../../services/interviewService.js';
