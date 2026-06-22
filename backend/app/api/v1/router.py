@@ -9,6 +9,7 @@ from app.api.v1.routes import (
     question_attempts,
     students,
     transcripts,
+    webhooks,
 )
 
 
@@ -33,3 +34,4 @@ api_router.include_router(
     prefix="/question-attempts",
     tags=["question-attempts"],
 )
+api_router.include_router(webhooks.router, tags=["webhooks"])
