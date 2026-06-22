@@ -434,6 +434,7 @@ export default function App() {
           element={requireAuth(
             <InterviewSetupPage
               profile={profile}
+      
               setup={setup}
               error={error}
               loading={loading}
@@ -441,6 +442,7 @@ export default function App() {
               onSetupChange={setSetup}
               onBack={signOut}
               onStart={startInterview}
+              accessToken={accessToken}
               onProfileUpdate={saveProfile}
               embedded
             />
