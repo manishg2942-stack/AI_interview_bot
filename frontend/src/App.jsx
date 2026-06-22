@@ -1,5 +1,6 @@
 import { LiveKitRoom } from '@livekit/components-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 
 import { AppShell } from './components/layout/AppShell.jsx';
 import { DEFAULT_INTERVIEW_SETUP } from './constants/interview.js';
@@ -51,7 +52,6 @@ export default function App() {
   const [joinData, setJoinData] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [activePage, setActivePage] = useState('dashboard');
   const [sessions, setSessions] = useState([]);
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [selectedFeedbackInterviewId, setSelectedFeedbackInterviewId] = useState('');
@@ -178,7 +178,7 @@ export default function App() {
 
       setAccessToken(data.access_token);
       setProfile(data.user);
-      setActivePage('dashboard');
+      navigate('/dashboard');
     } catch (requestError) {
       setError(getErrorMessage(requestError, 'Unable to sign in right now'));
     } finally {
@@ -194,7 +194,7 @@ export default function App() {
       const data = await loginWithGoogle(idToken);
       setAccessToken(data.access_token);
       setProfile(data.user);
-      setActivePage('dashboard');
+      navigate('/dashboard');
     } catch (requestError) {
       setError(getErrorMessage(requestError, 'Unable to sign in with Google right now'));
     } finally {
@@ -223,6 +223,8 @@ export default function App() {
     }
   }
 
+  const navigate = useNavigate();
+
   function signOut() {
     setProfile(null);
     setAccessToken('');
@@ -232,7 +234,7 @@ export default function App() {
     setSelectedFeedbackInterviewId('');
     setFeedbackGeneration({ active: false, messageIndex: 0, error: '', interviewId: '' });
     setCompletionState({ session: null, loading: false, error: '' });
-    setActivePage('dashboard');
+    navigate('/auth');
   }
 
   const updateInterviewSnapshot = useCallback((snapshot) => {
@@ -256,7 +258,7 @@ export default function App() {
     completionInFlightRef.current = true;
     setJoinData(null);
     setSelectedFeedbackInterviewId(sessionId);
-    setActivePage('completion');
+    navigate('/completion');
     setCompletionState({
       session: {
         id: sessionId,
@@ -383,24 +385,9 @@ export default function App() {
     );
   }
 
-  if (!profile) {
-    return (
-      <AuthPage
-        mode={authMode}
-        form={authForm}
-        error={error}
-        loading={loading}
-        onModeChange={setAuthMode}
-        onFormChange={setAuthForm}
-        onSubmit={submitAuth}
-        onGoogleCredential={submitGoogleAuth}
-      />
-    );
-  }
-
   function openFeedback(interviewId) {
     setSelectedFeedbackInterviewId(interviewId);
-    setActivePage('feedback');
+    navigate('/feedback');
   }
 
   function openCompletionFeedback() {
@@ -408,75 +395,108 @@ export default function App() {
       openFeedback(completionState.session.id);
       return;
     }
-    setActivePage('feedback');
+    navigate('/feedback');
   }
 
-  const pageContent = {
-    dashboard: (
-      <DashboardPage
-        profile={profile}
-        sessions={sessions}
-        loading={sessionsLoading}
-        onNavigate={setActivePage}
-      />
-    ),
-    practice: (
-      <InterviewSetupPage
-        profile={profile}
-        setup={setup}
-        error={error}
-        loading={loading}
-        questionStatus={questionStatus}
-        onSetupChange={setSetup}
-        onBack={signOut}
-        onStart={startInterview}
-        onProfileUpdate={saveProfile}
-        embedded
-      />
-    ),
-    history: (
-      <InterviewHistoryPage
-        sessions={sessions}
-        loading={sessionsLoading}
-        onOpenFeedback={openFeedback}
-        onStartPractice={() => setActivePage('practice')}
-      />
-    ),
-    completion: (
-      <InterviewCompletionPage
-        session={completionState.session}
-        loading={completionState.loading}
-        error={completionState.error}
-        onViewFeedback={openCompletionFeedback}
-        onDashboard={() => setActivePage('dashboard')}
-      />
-    ),
-    feedback: (
-      <FeedbackPage
-        accessToken={accessToken}
-        sessions={sessions}
-        initialInterviewId={selectedFeedbackInterviewId}
-        generation={feedbackGeneration}
-      />
-    ),
-    questions: <QuestionBankPage accessToken={accessToken} />,
-    profile: (
-      <ProfilePage
-        profile={profile}
-        loading={loading}
-        onSave={saveProfile}
-      />
-    ),
-  };
+  const requireAuth = (element) => (profile ? element : <Navigate to="/auth" replace />);
 
   return (
-    <AppShell
-      activePage={activePage}
-      profile={profile}
-      onNavigate={setActivePage}
-      onSignOut={signOut}
-    >
-      {pageContent[activePage] || pageContent.dashboard}
-    </AppShell>
+    <Routes>
+      <Route
+        path="/auth"
+        element={(
+          <AuthPage
+            mode={authMode}
+            form={authForm}
+            error={error}
+            loading={loading}
+            onModeChange={setAuthMode}
+            onFormChange={setAuthForm}
+            onSubmit={submitAuth}
+            onGoogleCredential={submitGoogleAuth}
+          />
+        )}
+      />
+      <Route path="/" element={<AppShell profile={profile} onSignOut={signOut} />}>
+        <Route
+          path="dashboard"
+          element={requireAuth(
+            <DashboardPage
+              profile={profile}
+              sessions={sessions}
+              loading={sessionsLoading}
+              onNavigate={(path) => navigate(path)}
+            />
+          )}
+        />
+        <Route
+          path="practice"
+          element={requireAuth(
+            <InterviewSetupPage
+              profile={profile}
+              setup={setup}
+              error={error}
+              loading={loading}
+              questionStatus={questionStatus}
+              onSetupChange={setSetup}
+              onBack={signOut}
+              onStart={startInterview}
+              onProfileUpdate={saveProfile}
+              embedded
+            />
+          )}
+        />
+        <Route
+          path="history"
+          element={requireAuth(
+            <InterviewHistoryPage
+              sessions={sessions}
+              loading={sessionsLoading}
+              onOpenFeedback={openFeedback}
+              onStartPractice={() => navigate('/practice')}
+            />
+          )}
+        />
+        <Route
+          path="completion"
+          element={requireAuth(
+            <InterviewCompletionPage
+              session={completionState.session}
+              loading={completionState.loading}
+              error={completionState.error}
+              onViewFeedback={openCompletionFeedback}
+              onDashboard={() => navigate('/dashboard')}
+            />
+          )}
+        />
+        <Route
+          path="feedback"
+          element={requireAuth(
+            <FeedbackPage
+              accessToken={accessToken}
+              sessions={sessions}
+              initialInterviewId={selectedFeedbackInterviewId}
+              generation={feedbackGeneration}
+            />
+          )}
+        />
+        <Route
+          path="questions"
+          element={requireAuth(<QuestionBankPage accessToken={accessToken} />)}
+        />
+        <Route
+          path="profile"
+          element={requireAuth(
+            <ProfilePage
+              profile={profile}
+              loading={loading}
+              onSave={saveProfile}
+            />
+          )}
+        />
+        <Route path="" element={<Navigate to={profile ? '/dashboard' : '/auth'} replace />} />
+      </Route>
+      <Route path="*" element={<Navigate to={profile ? '/dashboard' : '/auth'} replace />} />
+    </Routes>
   );
 }

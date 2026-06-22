@@ -1,0 +1,36 @@
+.table-card {
+  overflow-x: auto;
+}
+
+.data-table {
+  display: grid;
+  min-width: 760px;
+  align-items: center;
+  gap: 0;
+}
+
+.history-table {
+  grid-template-columns: 0.7fr 1fr 0.8fr 1.4fr 0.6fr 0.7fr;
+}
+
+.data-table > span,
+.data-table > strong,
+.data-table > button {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e5ece3;
+}
+
+.data-table > span:nth-child(-n + 6) {
+  min-height: 36px;
+  color: #607067;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.compact-button {
+  min-height: 40px;
+  padding: 0 16px;
+}

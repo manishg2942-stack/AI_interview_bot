@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import '../../styles/feedback.css';
 
 import { getInterviewFeedback } from '../../services/interviewService.js';
 import { getErrorMessage } from '../../utils/helpers.js';

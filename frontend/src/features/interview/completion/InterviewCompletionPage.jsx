@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../../styles/completion.css';
 
 const STATUS_TEXT = {
   pending: 'Feedback is queued',

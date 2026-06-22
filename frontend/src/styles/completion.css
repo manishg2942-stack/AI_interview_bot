@@ -1,0 +1,79 @@
+.completion-panel {
+  min-height: 560px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 16px;
+  padding: clamp(28px, 5vw, 56px);
+  border: 1px solid rgba(23, 32, 27, 0.08);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 24px 70px rgba(34, 44, 38, 0.1);
+  text-align: center;
+}
+
+.completion-status-mark {
+  display: grid;
+  min-width: 84px;
+  min-height: 44px;
+  place-items: center;
+  border-radius: 999px;
+  background: #e7f3ed;
+  color: #116956;
+  font-weight: 900;
+}
+
+.completion-panel > p {
+  margin: 0;
+  color: #116956;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.completion-panel h2 {
+  max-width: 720px;
+  margin: 0;
+  color: #17201b;
+  font-size: clamp(32px, 5vw, 54px);
+  line-height: 1.04;
+}
+
+.completion-panel > span {
+  color: #607067;
+  font-weight: 800;
+}
+
+.completion-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  color: #34423b;
+}
+
+.completion-progress .feedback-spinner {
+  width: 28px;
+  height: 28px;
+  border-width: 3px;
+}
+
+.completion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.completion-actions .primary-button,
+.completion-actions .ghost-button {
+  min-width: 190px;
+  padding: 0 18px;
+}
+
+.completion-error {
+  max-width: 560px;
+  text-align: left;
+}

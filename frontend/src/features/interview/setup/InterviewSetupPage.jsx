@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../../../styles/setup.css';
 
 import { BrandMark } from '../../../components/layout/BrandMark.jsx';
 import { OptionButton } from '../../../components/ui/OptionButton.jsx';
@@ -12,6 +13,7 @@ import {
   QUESTION_STATUS_TEXT,
 } from '../../../constants/interview.js';
 import { ResumeContextSection } from './ResumeContextSection.jsx';
+import { getLiveCounts } from '../../../services/interviewService.js';
 
 export function InterviewSetupPage({
   profile,
@@ -27,6 +29,7 @@ export function InterviewSetupPage({
 }) {
   const [editingProfile, setEditingProfile] = useState(false);
   const [profileName, setProfileName] = useState(profile.name);
+  const [liveCounts, setLiveCounts] = useState(null);
   const isDesignInterview = setup.type === 'lld' || setup.type === 'hld';
   const isBehavioralInterview = setup.type === 'behavioral';
   const designQuestions = setup.type === 'hld' ? HLD_QUESTIONS : LLD_QUESTIONS;
@@ -69,6 +72,45 @@ export function InterviewSetupPage({
         : setup.designQuestion,
     });
   }
+
+  function getCountForType(type) {
+    if (!liveCounts) return 0;
+    // map backend `hr` key to `hld` on frontend
+    if (type === 'hld') {
+      return liveCounts.hld || liveCounts.hr || 0;
+    }
+    return liveCounts[type] || 0;
+  }
+
+  useEffect(() => {
+    let mounted = true;
+    let intervalId;
+
+    async function fetchCounts() {
+      try {
+        const raw = await getLiveCounts();
+        if (!mounted) return;
+        if (raw) {
+          setLiveCounts({
+            dsa: raw.dsa || 0,
+            lld: raw.lld || 0,
+            hld: raw.hld || raw.hr || 0,
+            behavioral: raw.behavioral || 0,
+            total: raw.total || 0,
+          });
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    fetchCounts();
+    intervalId = setInterval(fetchCounts, 5000);
+    return () => {
+      mounted = false;
+      clearInterval(intervalId);
+    };
+  }, []);
 
   const content = (
       <section className={`setup-grid${embedded ? ' embedded-setup-grid' : ''}`}>
@@ -127,6 +169,8 @@ export function InterviewSetupPage({
                   title={type.label}
                   detail={type.detail}
                   onClick={() => changeInterviewType(type.value)}
+                  badge={getCountForType(type.value)}
+                  active={getCountForType(type.value) > 0}
                 />
               ))}
             </div>

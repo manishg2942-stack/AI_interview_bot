@@ -1,5 +1,5 @@
 import React from 'react';
-
+import '../../styles/dashboard.css';
 
 function averageScore(sessions) {
   const scored = sessions.filter((session) => typeof session.overall_score === 'number');

@@ -15,7 +15,7 @@ from app.schemas.livekit import (
 )
 from app.services.interview_feedback_domain_service import InterviewFeedbackDomainService
 from app.services.dsa_question_service import select_dsa_question_for_interview
-from app.services.session_service import list_interview_sessions_for_user, save_interview_session
+from app.services.session_service import get_live_interview_counts, list_interview_sessions_for_user, save_interview_session
 
 
 router = APIRouter()
@@ -149,3 +149,10 @@ async def complete_livekit_session(
         user_id=str(current_user["id"]),
     )
     return session
+
+@router.get("/live-counts")
+def get_live_counts(
+    current_user: dict[str, object] = Depends(get_current_user),
+    db: Database = Depends(get_db),
+) -> dict[str, object]:
+    return get_live_interview_counts(db)

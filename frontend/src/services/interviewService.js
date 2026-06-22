@@ -81,3 +81,9 @@ export function createLiveKitToken({
     body: JSON.stringify({ identity, name, room, interview }),
   });
 }
+
+export function getLiveCounts() {
+  return fetch('/api/livekit/live-counts', { cache: 'no-store' })
+    .then((res) => (res.ok ? res.json() : null))
+    .catch(() => null);
+}

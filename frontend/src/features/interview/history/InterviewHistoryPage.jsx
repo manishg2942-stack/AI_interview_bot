@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../../styles/history.css';
 
 function formatDate(value) {
   if (!value) {

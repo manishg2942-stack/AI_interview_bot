@@ -1,6 +1,7 @@
 import '@livekit/components-styles';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import App from './App.jsx';
@@ -14,8 +15,10 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId="341855789128-dub710ttmqudn0hfr2s59d6ovq331iu9.apps.googleusercontent.com">
-      <App />
-    </GoogleOAuthProvider>
+    <BrowserRouter>
+      <GoogleOAuthProvider clientId="341855789128-dub710ttmqudn0hfr2s59d6ovq331iu9.apps.googleusercontent.com">
+        <App />
+      </GoogleOAuthProvider>
+    </BrowserRouter>
   </React.StrictMode>,
 );
