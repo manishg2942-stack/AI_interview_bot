@@ -1,5 +1,5 @@
+//const DEFAULT_API_ORIGIN = 'https://api.codingace.online';
 const DEFAULT_API_ORIGIN = 'https://api.codingace.online';
-//const DEFAULT_API_ORIGIN = 'http://localhost:8000';
 const API_BASE_URL = `${( DEFAULT_API_ORIGIN).replace(/\/+$/, '')}/api`;
 
 export async function apiRequest(path, options) {
